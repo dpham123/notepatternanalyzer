@@ -46,6 +46,12 @@ class NoteAnalyzer {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 * @param keySig
+	 * @return
+	 */
 	KeySignature extractKeySig(int index, String keySig) {
 		String keySignature = "";
 		index += 7;
