@@ -48,7 +48,7 @@ class NoteAnalyzer {
 	
 	/**
 	 * 
-	 * @param index
+	 * @param index of the key signature
 	 * @param keySig
 	 * @return
 	 */
