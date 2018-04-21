@@ -14,7 +14,7 @@ class NoteAnalyzer {
 	
 	enum KeySignature{
 		C(0), 
-		Db(250),
+		Db(251),
 		D(2),
 		Eb(253),
 		E(4),
@@ -46,29 +46,37 @@ class NoteAnalyzer {
 		}
 	}
 	
+	KeySignature extractKeySig(int index, String keySig) {
+		String keySignature = "";
+		index += 7;
+		
+		// Scans for specific key signature in line
+		while (!keySig.substring(index, index + 1).equals(" ")) {
+			keySignature += keySig.substring(index, index + 1);
+			index++;
+		}
+		
+		return KeySignature.getKeySig(Integer.parseInt(keySignature));
+	}
+	
 	void parseMidiText() throws IOException {
 		// Initializes readers
 		FileReader fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
 		
-		// Initializes current line and key signature
+		// Initializes current line and key signature index
 		String line = "";
-		int keySig = -1;
+		int keySigIndex = -1;
 		
 		while (!line.equals("TrkEnd")) {
 			line = br.readLine();
-			keySig = line.indexOf("KeySig");
+			keySigIndex = line.indexOf("KeySig");
 			
 			// Scans for key signature changes
-			if (keySig != -1) {
-				keySig += 7;
-				String keySignature = "";
+			if (keySigIndex != -1) {
 				
-				// Scans for specific key signature in line
-				while (!line.substring(keySig, keySig + 1).equals(" ")) {
-					keySignature += line.substring(keySig, keySig + 1);
-					keySig++;
-				}
+				// Testing
+				sop(extractKeySig(keySigIndex, line));
 			}
 		}
 	}
@@ -84,7 +92,5 @@ class NoteAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		sop(KeySignature.getKeySig(1));
 	}
 }
