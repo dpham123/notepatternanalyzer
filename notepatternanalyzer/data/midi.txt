@@ -1,0 +1,52 @@
+MFile 1 2 480
+MTrk
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Tempo 750000
+0 Par ch=1 c=121 v=0
+0 PrCh ch=1 p=0
+0 Par ch=1 c=7 v=100
+0 Par ch=1 c=10 v=64
+0 Par ch=1 c=91 v=0
+0 Par ch=1 c=93 v=0
+0 Meta 0x21 00
+1920 KeySig 1 major
+1920 Tempo 740741
+3840 KeySig 2 major
+3840 Tempo 731707
+5760 KeySig 3 major
+5760 Tempo 722892
+7680 KeySig 4 major
+7680 Tempo 714286
+9600 KeySig 5 major
+9600 Tempo 705882
+11520 KeySig 255 major
+11520 Tempo 697674
+13440 KeySig 254 major
+13440 Tempo 689655
+15360 KeySig 253 major
+15360 Tempo 681818
+17280 KeySig 252 major
+17280 Tempo 674157
+19200 KeySig 251 major
+19200 Tempo 666667
+21120 KeySig 250 major
+21120 Tempo 659341
+21121 Meta TrkEnd
+TrkEnd
+MTrk
+0 KeySig 0 major
+0 Meta 0x21 00
+1920 KeySig 1 major
+3840 KeySig 2 major
+5760 KeySig 3 major
+7680 KeySig 4 major
+9600 KeySig 5 major
+11520 KeySig 255 major
+13440 KeySig 254 major
+15360 KeySig 253 major
+17280 KeySig 252 major
+19200 KeySig 251 major
+21120 KeySig 250 major
+21121 Meta TrkEnd
+TrkEnd
