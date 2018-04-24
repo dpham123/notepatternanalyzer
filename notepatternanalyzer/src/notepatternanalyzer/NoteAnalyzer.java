@@ -12,51 +12,11 @@ class NoteAnalyzer {
 		this.file = file;
 	}
 	
-	enum KeySignature{
-		C(0), 
-		Db(251),
-		D(2),
-		Eb(253),
-		E(4),
-		F(255),
-		Gb(250),
-		G(1),
-		Ab(252),
-		A(3),
-		Bb(254),
-		B(5);
+	KeySignature extractKeySig(String keySig) {
+		String[] parts = keySig.split(" ");
 		
-		private int value;
-		
-		private KeySignature(int value){
-			this.value = value;
-		}
-		
-		private int getValue() {
-			return value;
-		}
-		
-		private static KeySignature getKeySig(int value) {
-			for (KeySignature ks : KeySignature.values()) {
-				if (ks.getValue() == value) {
-					return ks;
-				}
-			}
-			return null;
-		}
-	}
-	
-	KeySignature extractKeySig(int index, String keySig) {
-		String keySignature = "";
-		index += 7;
-		
-		// Scans for specific key signature in line
-		while (!keySig.substring(index, index + 1).equals(" ")) {
-			keySignature += keySig.substring(index, index + 1);
-			index++;
-		}
-		
-		return KeySignature.getKeySig(Integer.parseInt(keySignature));
+		// Key signature comes in form <ind> KeySig <num> <manor>
+		return KeySignature.getKeySig(Integer.parseInt(parts[parts.length - 2]));
 	}
 	
 	void parseMidiText() throws IOException {
@@ -66,19 +26,44 @@ class NoteAnalyzer {
 		
 		// Initializes current line and key signature index
 		String line = "";
-		int keySigIndex = -1;
 		
 		while (!line.equals("TrkEnd")) {
 			line = br.readLine();
-			keySigIndex = line.indexOf("KeySig");
 			
 			// Scans for key signature changes
-			if (keySigIndex != -1) {
+			if (line.contains("KeySig")) {
 				
 				// Testing
-				sop(extractKeySig(keySigIndex, line));
+				sop(extractKeySig(line));
 			}
 		}
+		
+		// This code keeps track of the length of the index, making the runtime O(n+logn) 
+		// If used it should probably be put in another method.
+		// I think the runtime of substring depends on the difference of the two indices
+		// This optimizes theoretical runtime, but if we really want to optimize practical runtime, I think we should use c/c++
+//		String line = "";
+//		int indexLength = 1;
+//		
+//		while (!line.equals("TrkEnd")) {
+//			line = br.readLine();
+//			
+//			while (Character.isDigit(line.charAt(indexLength - 1)) && line.charAt(indexLength) != ' ') indexLength++;
+//			
+//			// Scans for key signature changes
+//			if (indexLength + 1 < line.length() && line.charAt(indexLength + 1) == 'K') {
+//				KeySignature k;
+//				int keyPos = indexLength + 8;
+//				if (line.charAt(keyPos + 1) == ' ') {
+//					k = KeySignature.getKeySig(line.charAt(keyPos) - '0');
+//				} else {
+//					k = KeySignature.getKeySig(Integer.parseInt(line.substring(keyPos, keyPos + 3)));
+//				}
+//				
+//				// Testing
+//				sop(k);
+//			}
+//		}
 	}
 	
 	private static void sop(Object x) {
@@ -92,5 +77,8 @@ class NoteAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		// Test
+		sop(Note.getNote(74, Accidental.FLAT));
 	}
 }
