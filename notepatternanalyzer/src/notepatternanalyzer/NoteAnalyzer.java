@@ -12,27 +12,91 @@ class NoteAnalyzer {
 		this.file = file;
 	}
 	
-	enum KeySignature{
+	enum Accidental{
+		FLAT, SHARP;
+	}
+	
+	enum Note{
 		C(0), 
-		Cs(7),
-		Db(251),
+		C_SHARP(1, Accidental.SHARP),
+		D_FLAT(1, Accidental.FLAT),
 		D(2),
-		Eb(253),
+		D_SHARP(3, Accidental.SHARP),
+		E_FLAT(3, Accidental.FLAT),
 		E(4),
-		F(255),
-		Fs(6),
-		Gb(250),
-		G(1),
-		Ab(252),
-		A(3),
-		Bb(254),
-		B(5),
-		Cb(249);
+		F(5),
+		F_SHARP(6, Accidental.SHARP),
+		G_FLAT(6, Accidental.FLAT),
+		G(7),
+		G_SHARP(8, Accidental.SHARP),
+		A_FLAT(8, Accidental.FLAT),
+		A(9),
+		A_SHARP(10, Accidental.SHARP),
+		B_FLAT(10, Accidental.FLAT),
+		B(11),
+		C_FLAT(11, Accidental.FLAT);
 		
 		private int value;
+		private Accidental accidental;
+		
+		private Note(int value, Accidental accidental){
+			this.value = value;
+			this.accidental = accidental;
+		}
+		
+		private Note(int value){
+			this.value = value;
+		}
+		
+		private int getValue() {
+			return value;
+		}
+		
+		private Accidental getAccidental() {
+			return accidental;
+		}
+		
+		// Need to define accidentals of notes in C major scale here
+		private static Note getNote(int value, Accidental accidental) {
+			for (Note n : Note.values()) {
+				if (n.getValue() == value % 12) {
+					if (n.getAccidental() == null || n.getAccidental() == accidental || accidental == null) {
+						return n;
+					}
+					
+				}
+			}
+			return null;
+		}
+	}
+	
+	enum KeySignature{
+		C(0), 
+		C_SHARP(7, Accidental.SHARP),
+		D_FLAT(251, Accidental.FLAT),
+		D(2, Accidental.SHARP),
+		E_FLAT(253, Accidental.FLAT),
+		E(4, Accidental.SHARP),
+		F(255, Accidental.FLAT),
+		F_SHARP(6, Accidental.SHARP),
+		G_FLAT(250, Accidental.FLAT),
+		G(1, Accidental.SHARP),
+		A_FLAT(252, Accidental.FLAT),
+		A(3, Accidental.SHARP),
+		B_FLAT(254, Accidental.FLAT),
+		B(5, Accidental.SHARP),
+		C_FLAT(249, Accidental.FLAT);
+		
+		private int value;
+		private Accidental accidental;
 		
 		private KeySignature(int value){
 			this.value = value;
+		}
+		
+		private KeySignature(int value, Accidental accidental){
+			this.value = value;
+			this.accidental = accidental;
 		}
 		
 		private int getValue() {
@@ -114,5 +178,7 @@ class NoteAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		sop(Note.getNote(74, Accidental.FLAT));
 	}
 }
