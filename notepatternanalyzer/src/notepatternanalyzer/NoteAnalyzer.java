@@ -179,6 +179,7 @@ class NoteAnalyzer {
 			e.printStackTrace();
 		}
 		
+		// Test
 		sop(Note.getNote(74, Accidental.FLAT));
 	}
 }
