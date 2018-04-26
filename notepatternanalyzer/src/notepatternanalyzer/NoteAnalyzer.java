@@ -12,17 +12,11 @@ class NoteAnalyzer {
 		this.file = file;
 	}
 	
-	KeySignature extractKeySig(int index, String keySig) {
-		String keySignature = "";
-		index += 7;
+	KeySignature extractKeySig(String keySig) {
+		String[] parts = keySig.split(" ");
 		
-		// Scans for specific key signature in line
-		while (!keySig.substring(index, index + 1).equals(" ")) {
-			keySignature += keySig.substring(index, index + 1);
-			index++;
-		}
-		
-		return KeySignature.getKeySig(Integer.parseInt(keySignature));
+		// Key signature comes in form <ind> KeySig <num> <manor>
+		return KeySignature.getKeySig(Integer.parseInt(parts[parts.length - 2]));
 	}
 	
 	void parseMidiText() throws IOException {
@@ -32,19 +26,44 @@ class NoteAnalyzer {
 		
 		// Initializes current line and key signature index
 		String line = "";
-		int keySigIndex = -1;
 		
 		while (!line.equals("TrkEnd")) {
 			line = br.readLine();
-			keySigIndex = line.indexOf("KeySig");
 			
 			// Scans for key signature changes
-			if (keySigIndex != -1) {
+			if (line.contains("KeySig")) {
 				
 				// Testing
-				sop(extractKeySig(keySigIndex, line));
+				sop(extractKeySig(line));
 			}
 		}
+		
+		// This code keeps track of the length of the index, making the runtime O(n+logn) 
+		// If used it should probably be put in another method.
+		// I think the runtime of substring depends on the difference of the two indices
+		// This optimizes theoretical runtime, but if we really want to optimize practical runtime, I think we should use c/c++
+//		String line = "";
+//		int indexLength = 1;
+//		
+//		while (!line.equals("TrkEnd")) {
+//			line = br.readLine();
+//			
+//			while (Character.isDigit(line.charAt(indexLength - 1)) && line.charAt(indexLength) != ' ') indexLength++;
+//			
+//			// Scans for key signature changes
+//			if (indexLength + 1 < line.length() && line.charAt(indexLength + 1) == 'K') {
+//				KeySignature k;
+//				int keyPos = indexLength + 8;
+//				if (line.charAt(keyPos + 1) == ' ') {
+//					k = KeySignature.getKeySig(line.charAt(keyPos) - '0');
+//				} else {
+//					k = KeySignature.getKeySig(Integer.parseInt(line.substring(keyPos, keyPos + 3)));
+//				}
+//				
+//				// Testing
+//				sop(k);
+//			}
+//		}
 	}
 	
 	private static void sop(Object x) {
