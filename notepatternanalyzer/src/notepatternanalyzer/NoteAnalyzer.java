@@ -79,6 +79,11 @@ class NoteAnalyzer {
 		}
 		
 		// Test
+		sop("------------------");
+		for (int i = 3; i < 15; i++) {
+			sop(Note.getNote(i, KeySignature.E_FLAT));
+		}
+=======
 		sop(Note.getNote(74, Accidental.FLAT));
 	}
 }
