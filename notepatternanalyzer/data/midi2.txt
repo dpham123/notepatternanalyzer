@@ -66,7 +66,6 @@ MTrk
 19103 On ch=1 n=78 v=0
 19104 Meta TrkEnd
 TrkEnd
-=======
 MFile 0 1 480
 MTrk
 0 TimeSig 4/4 24 8
