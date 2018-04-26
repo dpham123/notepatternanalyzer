@@ -32,6 +32,7 @@ enum KeySignature {
 	private KeySignature(int value, Note note, Accidental accidental) {
 		this.value = value;
 		this.note = note;
+		this.accidental = accidental;
 	}
 	
 
