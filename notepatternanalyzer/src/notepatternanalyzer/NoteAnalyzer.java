@@ -12,40 +12,6 @@ class NoteAnalyzer {
 		this.file = file;
 	}
 	
-	enum KeySignature{
-		C(0), 
-		Db(251),
-		D(2),
-		Eb(253),
-		E(4),
-		F(255),
-		Gb(250),
-		G(1),
-		Ab(252),
-		A(3),
-		Bb(254),
-		B(5);
-		
-		private int value;
-		
-		private KeySignature(int value){
-			this.value = value;
-		}
-		
-		private int getValue() {
-			return value;
-		}
-		
-		private static KeySignature getKeySig(int value) {
-			for (KeySignature ks : KeySignature.values()) {
-				if (ks.getValue() == value) {
-					return ks;
-				}
-			}
-			return null;
-		}
-	}
-	
 	KeySignature extractKeySig(int index, String keySig) {
 		String keySignature = "";
 		index += 7;
@@ -92,15 +58,11 @@ class NoteAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-<<<<<<< HEAD
-=======
 		
 		// Test
 		sop("------------------");
 		for (int i = 3; i < 15; i++) {
 			sop(Note.getNote(i, KeySignature.E_FLAT));
 		}
-		
->>>>>>> stash
 	}
 }
