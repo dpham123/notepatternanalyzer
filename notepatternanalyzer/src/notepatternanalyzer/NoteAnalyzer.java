@@ -92,5 +92,15 @@ class NoteAnalyzer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+<<<<<<< HEAD
+=======
+		
+		// Test
+		sop("------------------");
+		for (int i = 3; i < 15; i++) {
+			sop(Note.getNote(i, KeySignature.E_FLAT));
+		}
+		
+>>>>>>> stash
 	}
 }
