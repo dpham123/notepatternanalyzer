@@ -80,8 +80,8 @@ class NoteAnalyzer {
 		
 		// Test
 		sop("------------------");
-		for (int i = 3; i < 15; i++) {
-			sop(Note.getNote(i, KeySignature.E_FLAT));
+		for (int i = 8; i < 20; i++) {
+			sop(Note.getNote(i, KeySignature.A_FLAT));
 		}
 	}
 }

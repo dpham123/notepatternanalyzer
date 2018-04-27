@@ -69,20 +69,30 @@ enum Note {
 
 			// First checks to make sure the note n is the same as the note we're passing in
 			if (n.getValue() == value % 12) {
-
+				
 				/*
-				 * Checks to see if the note is 3 semitones from the root note of the key
-				 * signature then returns flatted version of note
+				 * Checks to see if the note is 1,3,8, or 10 semitones from the root note of the key
+				 * signature then returns flatted or version of note according to the conventions
+				 * defined above. Also returns the note if note "n" is a natural note.
+				 * 
+				 * The accidental for the 6th semitone from the root note of the key signature has
+				 * not been explicitly defined. It is assumed it will take the accidental after its
+				 * key signature.
 				 */
-				if ((value % 12) - ks.getNote().getValue() == 3) {
+				if ((value % 12) - ks.getNote().getValue() == 1) {
+					if (n.getAccidental() == Accidental.SHARP || n.getAccidental() == null) {
+						return n;
+					}
+				
+				} else if ((value % 12) - ks.getNote().getValue() == 3) {
 					if (n.getAccidental() == Accidental.FLAT || n.getAccidental() == null) {
 						return n;
 					}
-
-					/*
-					 * Checks to see if the note is 10 semitones from the root note of the key
-					 * signature then returns flatted version of note
-					 */
+				} else if ((value % 12) - ks.getNote().getValue() == 8) {
+					if (n.getAccidental() == Accidental.SHARP || n.getAccidental() == null) {
+						return n;
+					}
+					
 				} else if ((value % 12) - ks.getNote().getValue() == 10) {
 					if (n.getAccidental() == Accidental.FLAT || n.getAccidental() == null) {
 						return n;
