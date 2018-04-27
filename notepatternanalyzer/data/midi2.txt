@@ -66,3 +66,71 @@ MTrk
 19103 On ch=1 n=78 v=0
 19104 Meta TrkEnd
 TrkEnd
+MFile 0 1 480
+MTrk
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Tempo 500000
+0 Par ch=1 c=121 v=0
+0 PrCh ch=1 p=0
+0 Par ch=1 c=7 v=100
+0 Par ch=1 c=10 v=64
+0 Par ch=1 c=91 v=0
+0 Par ch=1 c=93 v=0
+0 Meta 0x21 00
+0 On ch=1 n=72 v=80
+455 On ch=1 n=72 v=0
+480 On ch=1 n=74 v=80
+935 On ch=1 n=74 v=0
+960 On ch=1 n=76 v=80
+1415 On ch=1 n=76 v=0
+1440 On ch=1 n=77 v=80
+1895 On ch=1 n=77 v=0
+1920 On ch=1 n=79 v=80
+3743 On ch=1 n=79 v=0
+3840 KeySig 1 major
+3840 On ch=1 n=67 v=80
+4295 On ch=1 n=67 v=0
+4320 On ch=1 n=69 v=80
+4775 On ch=1 n=69 v=0
+4800 On ch=1 n=71 v=80
+5255 On ch=1 n=71 v=0
+5280 On ch=1 n=72 v=80
+5735 On ch=1 n=72 v=0
+5760 On ch=1 n=74 v=80
+7583 On ch=1 n=74 v=0
+7680 KeySig 255 major
+7680 On ch=1 n=65 v=80
+8135 On ch=1 n=65 v=0
+8160 On ch=1 n=67 v=80
+8615 On ch=1 n=67 v=0
+8640 On ch=1 n=69 v=80
+9095 On ch=1 n=69 v=0
+9120 On ch=1 n=70 v=80
+9575 On ch=1 n=70 v=0
+9600 On ch=1 n=72 v=80
+11423 On ch=1 n=72 v=0
+11520 KeySig 7 major
+11520 On ch=1 n=73 v=80
+11975 On ch=1 n=73 v=0
+12000 On ch=1 n=75 v=80
+12455 On ch=1 n=75 v=0
+12480 On ch=1 n=77 v=80
+12935 On ch=1 n=77 v=0
+12960 On ch=1 n=78 v=80
+13415 On ch=1 n=78 v=0
+13440 On ch=1 n=80 v=80
+15263 On ch=1 n=80 v=0
+15360 KeySig 249 major
+15360 On ch=1 n=71 v=80
+15815 On ch=1 n=71 v=0
+15840 On ch=1 n=73 v=80
+16295 On ch=1 n=73 v=0
+16320 On ch=1 n=75 v=80
+16775 On ch=1 n=75 v=0
+16800 On ch=1 n=76 v=80
+17255 On ch=1 n=76 v=0
+17280 On ch=1 n=78 v=80
+19103 On ch=1 n=78 v=0
+19104 Meta TrkEnd
+TrkEnd
