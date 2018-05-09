@@ -71,17 +71,27 @@ class NoteAnalyzer {
 	}
 	
 	public static void main(String[] args) {
-		NoteAnalyzer na = new NoteAnalyzer(new File("data/midi.txt"));
+		NoteAnalyzer na = new NoteAnalyzer(new File("data/TheishterSample1.txt"));
+//		try {
+//			na.parseMidiText();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		// Test
+//		sop("------------------");
+//		for (int i = 4; i < 20; i++) {
+//			sop(Note.getNote(i, KeySignature.E));
+//		}
+		
+		NoteSequence ns;
 		try {
-			na.parseMidiText();
+			ns = new NoteSequence(na.file);
+			for (NoteCluster notes : ns) {
+				sop(notes);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		// Test
-		sop("------------------");
-		for (int i = 4; i < 20; i++) {
-			sop(Note.getNote(i, KeySignature.E));
 		}
 	}
 }

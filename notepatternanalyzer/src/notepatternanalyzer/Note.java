@@ -24,7 +24,7 @@ enum Note {
 	
 	private int value;
 	private Accidental accidental;
-
+	
 	private Note(int value, Accidental accidental) {
 		this.value = value;
 		this.accidental = accidental;
