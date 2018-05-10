@@ -71,7 +71,7 @@ class NoteAnalyzer {
 	}
 	
 	public static void main(String[] args) {
-		NoteAnalyzer na = new NoteAnalyzer(new File("data/TheishterSample1.txt"));
+		NoteAnalyzer na = new NoteAnalyzer(new File("data/whitenotes.txt"));
 //		try {
 //			na.parseMidiText();
 //		} catch (IOException e) {

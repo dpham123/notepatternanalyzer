@@ -13,6 +13,8 @@ class NoteCluster {
 	// More "meta" data
 	private KeySignature keySig;
 	private int tempo;
+	private int ppq;
+	private int timestamp;
 	
 	/**
 	 * Constructor with full parameters
@@ -21,7 +23,7 @@ class NoteCluster {
 	 * @param offNotes a list of the notes being turned off
 	 * @param duration the duration
 	 */
-	public NoteCluster(NoteCluster prev, List<Integer> onNotes, List<Integer> offNotes, int duration, KeySignature keySig, int tempo) {
+	public NoteCluster(NoteCluster prev, List<Integer> onNotes, List<Integer> offNotes, int timestamp, KeySignature keySig, int tempo, int ppq) {
 		if (prev != null) {
 			for (int octave = 0; octave < 9; octave++) {
 				for (int value = 0; value < 12; value++) {
@@ -38,9 +40,10 @@ class NoteCluster {
 			setNote(note, true);
 		}
 		
-		this.duration = duration;
+		this.timestamp = timestamp;
 		this.keySig = keySig;
 		this.tempo = tempo;
+		this.ppq = ppq;
 	}
 	
 	/**
@@ -76,9 +79,13 @@ class NoteCluster {
 		this.newNotes[octave][value] = on;
 	}
 	
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+	
 	@Override
 	public String toString() {
-		String ret = "" + duration + ": ";
+		String ret = timestamp + "~" + (float)duration / ppq / 4 + ": ";
 		
 		for (int octave = 0; octave < 9; octave++) {
 			for (int value = 0; value < 12; value++) {
