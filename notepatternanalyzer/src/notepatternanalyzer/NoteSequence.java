@@ -13,10 +13,12 @@ public class NoteSequence implements Iterable<NoteCluster> {
 
 
 	// Constants and variables
-	public static final String[] InterestingTags = new String[] {"Tempo","KeySig","On","Off"};
+	public static final String[] InterestingTags = new String[] {"Tempo","KeySig","TimeSig","On","Off"};
 	private int size = 0;
 	private NoteClusterNode root;
 	
+	// MetaData
+	private int ppq = 480;	// Seemingly Musescore's default
 	
 	/**
 	 * Node that holds note data
@@ -60,6 +62,8 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		int time = 0;
 		KeySignature keySig = KeySignature.C;
 		int tempo = 500000;
+		int bpb = 4;
+		int beatNote = 4;
 		NoteClusterNode prev = null;
 		
 		// Iterate through the data to fill the nodes
@@ -77,6 +81,8 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        		break;
 	        	case "KeySig":
 	        		keySig = KeySignature.getKeySig(Integer.parseInt(event.get(1)));
+	        		break;
+	        	case "TimeSig":
 	        		break;
 	        	case "On":
 	        		if (event.contains("v=0")) {
@@ -96,10 +102,11 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        // Create the node and push it onto the list
         	NoteClusterNode node;
 	        if (prev != null) { 
-	        	node = new NoteClusterNode(new NoteCluster(prev.getNotes(), onNotes, offNotes, timestamp - time, keySig, tempo), prev, null);
+	        	node = new NoteClusterNode(new NoteCluster(prev.getNotes(), onNotes, offNotes, timestamp, keySig, tempo, ppq), prev, null);
 	        	prev.setNext(node);
+	        	prev.getNotes().setDuration(timestamp - time);
 	        } else {
-	        	node = new NoteClusterNode(new NoteCluster(null, onNotes, offNotes, timestamp - time, keySig, tempo), prev, null);
+	        	node = new NoteClusterNode(new NoteCluster(null, onNotes, offNotes, timestamp, keySig, tempo, ppq), prev, null);
 	        	root = node;
 	        }
 	        prev = node;
@@ -114,7 +121,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	 * @return a map in the form [timestamp]: {{Tag, args...}, ...}
 	 * @throws IOException
 	 */
-	public static TreeMap<Integer, List<List<String>>> parseMidiText(File file) throws IOException {
+	public TreeMap<Integer, List<List<String>>> parseMidiText(File file) throws IOException {
 		// Parse the file for only the lines that matter
 		FileReader fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
@@ -145,7 +152,13 @@ public class NoteSequence implements Iterable<NoteCluster> {
 			        	eventList.put(timestamp, events);
 			        }
 			    } catch(NumberFormatException e) {
-			    	continue;
+			    	if (parts[0] == "MFile") {
+			    		try {
+			    			this.ppq = Integer.parseInt(parts[3]);
+			    		} catch (NumberFormatException e2) {
+			    			continue;
+			    		}
+			    	}
 			    }
 			}
 		}
