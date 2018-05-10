@@ -12,43 +12,6 @@ class NoteAnalyzer {
 		this.file = file;
 	}
 	
-	enum KeySignature{
-		C(0), 
-		Cs(7),
-		Db(251),
-		D(2),
-		Eb(253),
-		E(4),
-		F(255),
-		Fs(6),
-		Gb(250),
-		G(1),
-		Ab(252),
-		A(3),
-		Bb(254),
-		B(5),
-		Cb(249);
-		
-		private int value;
-		
-		private KeySignature(int value){
-			this.value = value;
-		}
-		
-		private int getValue() {
-			return value;
-		}
-		
-		private static KeySignature getKeySig(int value) {
-			for (KeySignature ks : KeySignature.values()) {
-				if (ks.getValue() == value) {
-					return ks;
-				}
-			}
-			return null;
-		}
-	}
-	
 	KeySignature extractKeySig(String keySig) {
 		String[] parts = keySig.split(" ");
 		
@@ -108,9 +71,25 @@ class NoteAnalyzer {
 	}
 	
 	public static void main(String[] args) {
-		NoteAnalyzer na = new NoteAnalyzer(new File("data/midi.txt"));
+		NoteAnalyzer na = new NoteAnalyzer(new File("data/TheishterSample1.txt"));
+//		try {
+//			na.parseMidiText();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		// Test
+//		sop("------------------");
+//		for (int i = 4; i < 20; i++) {
+//			sop(Note.getNote(i, KeySignature.E));
+//		}
+		
+		NoteSequence ns;
 		try {
-			na.parseMidiText();
+			ns = new NoteSequence(na.file);
+			for (NoteCluster notes : ns) {
+				sop(notes);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
