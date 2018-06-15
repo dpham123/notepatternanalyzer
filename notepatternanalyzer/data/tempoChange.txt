@@ -1,0 +1,126 @@
+MFile 1 2 480
+MTrk
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Tempo 600000
+0 Par ch=1 c=121 v=0
+0 PrCh ch=1 p=0
+0 Par ch=1 c=7 v=100
+0 Par ch=1 c=10 v=64
+0 Par ch=1 c=91 v=0
+0 Par ch=1 c=93 v=0
+0 Meta 0x21 00
+0 On ch=1 n=74 v=80
+455 On ch=1 n=74 v=0
+480 On ch=1 n=74 v=80
+935 On ch=1 n=74 v=0
+960 On ch=1 n=74 v=80
+1415 On ch=1 n=74 v=0
+1440 On ch=1 n=74 v=80
+1895 On ch=1 n=74 v=0
+1920 Tempo 545455
+1920 On ch=1 n=74 v=80
+2375 On ch=1 n=74 v=0
+2400 On ch=1 n=74 v=80
+2855 On ch=1 n=74 v=0
+2880 On ch=1 n=74 v=80
+3335 On ch=1 n=74 v=0
+3360 On ch=1 n=74 v=80
+3815 On ch=1 n=74 v=0
+3840 Tempo 500000
+3840 On ch=1 n=74 v=80
+4295 On ch=1 n=74 v=0
+4320 On ch=1 n=74 v=80
+4775 On ch=1 n=74 v=0
+4800 On ch=1 n=74 v=80
+5255 On ch=1 n=74 v=0
+5280 On ch=1 n=74 v=80
+5735 On ch=1 n=74 v=0
+5760 Tempo 461538
+5760 On ch=1 n=74 v=80
+6215 On ch=1 n=74 v=0
+6240 On ch=1 n=74 v=80
+6695 On ch=1 n=74 v=0
+6720 On ch=1 n=74 v=80
+7175 On ch=1 n=74 v=0
+7200 On ch=1 n=74 v=80
+7655 On ch=1 n=74 v=0
+7680 Tempo 428571
+7680 On ch=1 n=74 v=80
+8135 On ch=1 n=74 v=0
+8160 On ch=1 n=74 v=80
+8615 On ch=1 n=74 v=0
+8640 On ch=1 n=74 v=80
+9095 On ch=1 n=74 v=0
+9120 On ch=1 n=74 v=80
+9575 On ch=1 n=74 v=0
+9600 Tempo 400000
+9600 On ch=1 n=74 v=80
+10055 On ch=1 n=74 v=0
+10080 On ch=1 n=74 v=80
+10535 On ch=1 n=74 v=0
+10560 On ch=1 n=74 v=80
+11015 On ch=1 n=74 v=0
+11040 On ch=1 n=74 v=80
+11495 On ch=1 n=74 v=0
+11520 Tempo 375000
+11520 On ch=1 n=74 v=80
+11975 On ch=1 n=74 v=0
+12000 On ch=1 n=74 v=80
+12455 On ch=1 n=74 v=0
+12480 On ch=1 n=74 v=80
+12935 On ch=1 n=74 v=0
+12960 On ch=1 n=74 v=80
+13415 On ch=1 n=74 v=0
+13440 Tempo 352941
+13440 On ch=1 n=74 v=80
+13895 On ch=1 n=74 v=0
+13920 On ch=1 n=74 v=80
+14375 On ch=1 n=74 v=0
+14400 On ch=1 n=74 v=80
+14855 On ch=1 n=74 v=0
+14880 On ch=1 n=74 v=80
+15335 On ch=1 n=74 v=0
+15360 Tempo 333333
+15360 On ch=1 n=74 v=80
+15815 On ch=1 n=74 v=0
+15840 On ch=1 n=74 v=80
+16295 On ch=1 n=74 v=0
+16320 On ch=1 n=74 v=80
+16775 On ch=1 n=74 v=0
+16800 On ch=1 n=74 v=80
+17255 On ch=1 n=74 v=0
+17280 Tempo 315789
+17280 On ch=1 n=74 v=80
+17735 On ch=1 n=74 v=0
+17760 On ch=1 n=74 v=80
+18215 On ch=1 n=74 v=0
+18240 On ch=1 n=74 v=80
+18695 On ch=1 n=74 v=0
+18720 On ch=1 n=74 v=80
+19175 On ch=1 n=74 v=0
+19200 Tempo 300000
+19200 On ch=1 n=74 v=80
+19655 On ch=1 n=74 v=0
+19680 On ch=1 n=74 v=80
+20135 On ch=1 n=74 v=0
+20160 On ch=1 n=74 v=80
+20615 On ch=1 n=74 v=0
+20640 On ch=1 n=74 v=80
+21095 On ch=1 n=74 v=0
+21120 Tempo 285714
+21120 On ch=1 n=74 v=80
+21575 On ch=1 n=74 v=0
+21600 On ch=1 n=74 v=80
+22055 On ch=1 n=74 v=0
+22080 On ch=1 n=74 v=80
+22535 On ch=1 n=74 v=0
+22560 On ch=1 n=74 v=80
+23015 On ch=1 n=74 v=0
+23016 Meta TrkEnd
+TrkEnd
+MTrk
+0 KeySig 0 major
+0 Meta 0x21 00
+1 Meta TrkEnd
+TrkEnd

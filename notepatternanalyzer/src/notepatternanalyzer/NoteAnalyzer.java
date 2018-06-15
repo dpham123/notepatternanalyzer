@@ -71,7 +71,7 @@ class NoteAnalyzer {
 	}
 	
 	public static void main(String[] args) {
-		NoteAnalyzer na = new NoteAnalyzer(new File("data/whitenotes.txt"));
+		NoteAnalyzer na = new NoteAnalyzer(new File("data/tempoChange.txt"));
 //		try {
 //			na.parseMidiText();
 //		} catch (IOException e) {
@@ -87,7 +87,13 @@ class NoteAnalyzer {
 		NoteSequence ns;
 		try {
 			ns = new NoteSequence(na.file);
+			
+			int tempo = 0;
 			for (NoteCluster notes : ns) {
+				if (notes.getTempo() != tempo) {
+					tempo = notes.getTempo();
+					sop("Tempo: " + tempo);
+				}
 				sop(notes);
 			}
 		} catch (IOException e) {

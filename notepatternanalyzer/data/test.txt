@@ -1,0 +1,43 @@
+MFile 1 2 480
+MTrk
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Tempo 600000
+0 Par ch=1 c=121 v=0
+0 PrCh ch=1 p=0
+0 Par ch=1 c=7 v=100
+0 Par ch=1 c=10 v=64
+0 Par ch=1 c=91 v=0
+0 Par ch=1 c=93 v=0
+0 Meta 0x21 00
+0 On ch=1 n=60 v=80
+0 On ch=1 n=64 v=80
+0 On ch=1 n=67 v=80
+0 On ch=1 n=72 v=80
+455 On ch=1 n=60 v=0
+455 On ch=1 n=64 v=0
+455 On ch=1 n=67 v=0
+455 On ch=1 n=72 v=0
+480 On ch=1 n=62 v=80
+707 On ch=1 n=62 v=0
+720 On ch=1 n=57 v=80
+959 On ch=1 n=57 v=0
+960 On ch=1 n=53 v=80
+1199 On ch=1 n=53 v=0
+1200 On ch=1 n=57 v=80
+1427 On ch=1 n=57 v=0
+1428 Meta TrkEnd
+TrkEnd
+MTrk
+0 KeySig 0 major
+0 Meta 0x21 00
+0 On ch=1 n=76 v=80
+455 On ch=1 n=76 v=0
+480 On ch=1 n=76 v=80
+707 On ch=1 n=76 v=0
+720 On ch=1 n=72 v=80
+947 On ch=1 n=72 v=0
+960 On ch=1 n=71 v=80
+1187 On ch=1 n=71 v=0
+1188 Meta TrkEnd
+TrkEnd
