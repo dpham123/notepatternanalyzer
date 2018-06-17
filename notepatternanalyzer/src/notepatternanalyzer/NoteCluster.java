@@ -14,6 +14,8 @@ class NoteCluster {
 	private KeySignature keySig;
 	private int tempo;
 	private int ppq;
+	private int bpb;
+	private int beatNote;
 	private int timestamp;
 	
 	/**
@@ -23,7 +25,7 @@ class NoteCluster {
 	 * @param offNotes a list of the notes being turned off
 	 * @param duration the duration
 	 */
-	public NoteCluster(NoteCluster prev, List<Integer> onNotes, List<Integer> offNotes, int timestamp, KeySignature keySig, float tempo, int ppq) {
+	public NoteCluster(NoteCluster prev, List<Integer> onNotes, List<Integer> offNotes, int timestamp, KeySignature keySig, float tempo, int bpb, int beatNote, int ppq) {
 		if (prev != null) {
 			for (int octave = 0; octave < 9; octave++) {
 				for (int value = 0; value < 12; value++) {
@@ -43,6 +45,8 @@ class NoteCluster {
 		this.timestamp = timestamp;
 		this.keySig = keySig;
 		this.tempo = Math.round(60000000 / tempo);
+		this.bpb = bpb;
+		this.beatNote = beatNote;
 		this.ppq = ppq;
 	}
 	
@@ -83,8 +87,20 @@ class NoteCluster {
 		this.duration = duration;
 	}
 	
+	int getTimeStamp() {
+		return timestamp;
+	}
+	
 	int getTempo(){
 		return tempo;
+	}
+	
+	int getBpb() {
+		return bpb;
+	}
+	
+	int getBeatNote() {
+		return beatNote;
 	}
 	
 	@Override

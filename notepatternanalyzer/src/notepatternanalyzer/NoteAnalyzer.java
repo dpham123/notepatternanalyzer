@@ -1,69 +1,68 @@
 package notepatternanalyzer;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 class NoteAnalyzer {
 	private File file;
+	private int tempo;
+	private int bpb;
+	private int beatNote;
+	private int measureDurationInTicks;
+	private int nextMeasureInTicks;
+	private int currentMeasure;
+	private boolean alreadyPrinted;
 	
 	NoteAnalyzer(File file){
 		this.file = file;
+		nextMeasureInTicks = 0;
+		currentMeasure = 1;
+		alreadyPrinted = false;
 	}
-	
-	KeySignature extractKeySig(String keySig) {
-		String[] parts = keySig.split(" ");
-		
-		// Key signature comes in form <ind> KeySig <num> <manor>
-		return KeySignature.getKeySig(Integer.parseInt(parts[parts.length - 2]));
-	}
-	
-	void parseMidiText() throws IOException {
-		// Initializes readers
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
-		
-		// Initializes current line and key signature index
-		String line = "";
-		
-		while (!line.equals("TrkEnd")) {
-			line = br.readLine();
+
+	private void printTempo(NoteCluster notes) {
+		if (notes.getTempo() != tempo) {
+			tempo = notes.getTempo();
 			
-			// Scans for key signature changes
-			if (line.contains("KeySig")) {
-				
-				// Testing
-				sop(extractKeySig(line));
+			if (!alreadyPrinted) {
+				sop("=================================================");
 			}
+			sop("Tempo: " + tempo);
 		}
-		
-		// This code keeps track of the length of the index, making the runtime O(n+logn) 
-		// If used it should probably be put in another method.
-		// I think the runtime of substring depends on the difference of the two indices
-		// This optimizes theoretical runtime, but if we really want to optimize practical runtime, I think we should use c/c++
-//		String line = "";
-//		int indexLength = 1;
-//		
-//		while (!line.equals("TrkEnd")) {
-//			line = br.readLine();
-//			
-//			while (Character.isDigit(line.charAt(indexLength - 1)) && line.charAt(indexLength) != ' ') indexLength++;
-//			
-//			// Scans for key signature changes
-//			if (indexLength + 1 < line.length() && line.charAt(indexLength + 1) == 'K') {
-//				KeySignature k;
-//				int keyPos = indexLength + 8;
-//				if (line.charAt(keyPos + 1) == ' ') {
-//					k = KeySignature.getKeySig(line.charAt(keyPos) - '0');
-//				} else {
-//					k = KeySignature.getKeySig(Integer.parseInt(line.substring(keyPos, keyPos + 3)));
-//				}
-//				
-//				// Testing
-//				sop(k);
-//			}
-//		}
+	}
+	
+	private void printTimeSig(NoteCluster notes) {
+		if (notes.getBpb() != bpb || notes.getBeatNote() != beatNote) {
+			sop("=================================================");
+			bpb = notes.getBpb();
+			beatNote = notes.getBeatNote();
+			alreadyPrinted = true;
+			
+			measureDurationInTicks = 1920 * (bpb / beatNote);
+			sop(bpb + "/" + beatNote);
+		}
+	}
+	
+	private int calculateNextMeasure(int oldMeasureTimeStamp) {
+		return oldMeasureTimeStamp + measureDurationInTicks;
+	}
+	
+	private void printMeasure(NoteCluster notes) {
+		if (notes.getTimeStamp() >= nextMeasureInTicks) {
+			
+			if (!alreadyPrinted) {
+				sop("=================================================");
+			}
+			
+			sop("Measure " + currentMeasure);
+			sop("=================================================");
+			nextMeasureInTicks = calculateNextMeasure(nextMeasureInTicks);
+			currentMeasure++;
+		}
+	}
+	
+	private void updateAlreadyPrinted(boolean alreadyPrinted) {
+		this.alreadyPrinted = alreadyPrinted;
 	}
 	
 	private static void sop(Object x) {
@@ -71,30 +70,18 @@ class NoteAnalyzer {
 	}
 	
 	public static void main(String[] args) {
-		NoteAnalyzer na = new NoteAnalyzer(new File("data/tempoChange.txt"));
-//		try {
-//			na.parseMidiText();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		// Test
-//		sop("------------------");
-//		for (int i = 4; i < 20; i++) {
-//			sop(Note.getNote(i, KeySignature.E));
-//		}
+		NoteAnalyzer na = new NoteAnalyzer(new File("data/animenzSample1.txt"));
 		
 		NoteSequence ns;
 		try {
 			ns = new NoteSequence(na.file);
 			
-			int tempo = 0;
 			for (NoteCluster notes : ns) {
-				if (notes.getTempo() != tempo) {
-					tempo = notes.getTempo();
-					sop("Tempo: " + tempo);
-				}
+				na.printTimeSig(notes);
+				na.printTempo(notes);
+				na.printMeasure(notes);
 				sop(notes);
+				na.updateAlreadyPrinted(false);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -83,6 +83,9 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        		keySig = KeySignature.getKeySig(Integer.parseInt(event.get(1)));
 	        		break;
 	        	case "TimeSig":
+	        		String[] timeSigNumbers = event.get(1).split("/");
+	        		bpb = Integer.parseInt(timeSigNumbers[0]);
+	        		beatNote = Integer.parseInt(timeSigNumbers[1]);
 	        		break;
 	        	case "On":
 	        		if (event.contains("v=0")) {
@@ -102,11 +105,11 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        // Create the node and push it onto the list
         	NoteClusterNode node;
 	        if (prev != null) { 
-	        	node = new NoteClusterNode(new NoteCluster(prev.getNotes(), onNotes, offNotes, timestamp, keySig, tempo, ppq), prev, null);
+	        	node = new NoteClusterNode(new NoteCluster(prev.getNotes(), onNotes, offNotes, timestamp, keySig, tempo, bpb, beatNote, ppq), prev, null);
 	        	prev.setNext(node);
 	        	prev.getNotes().setDuration(timestamp - time);
 	        } else {
-	        	node = new NoteClusterNode(new NoteCluster(null, onNotes, offNotes, timestamp, keySig, tempo, ppq), prev, null);
+	        	node = new NoteClusterNode(new NoteCluster(null, onNotes, offNotes, timestamp, keySig, tempo, bpb, beatNote, ppq), prev, null);
 	        	root = node;
 	        }
 	        prev = node;
