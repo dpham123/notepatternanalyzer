@@ -31,14 +31,15 @@ class NoteAnalyzer {
 		}
 	}
 	
-	private void printTimeSig(NoteCluster notes) {
+	private void printTimeSig(NoteCluster notes, NoteSequence ns) {
 		if (notes.getBpb() != bpb || notes.getBeatNote() != beatNote) {
 			sop("=================================================");
 			bpb = notes.getBpb();
 			beatNote = notes.getBeatNote();
+			int ppq = ns.getPpq();
 			alreadyPrinted = true;
 			
-			measureDurationInTicks = 1920 * (bpb / beatNote);
+			measureDurationInTicks = (ppq * beatNote) * (bpb / beatNote);
 			sop(bpb + "/" + beatNote);
 		}
 	}
@@ -77,7 +78,7 @@ class NoteAnalyzer {
 			ns = new NoteSequence(na.file);
 			
 			for (NoteCluster notes : ns) {
-				na.printTimeSig(notes);
+				na.printTimeSig(notes, ns);
 				na.printTempo(notes);
 				na.printMeasure(notes);
 				sop(notes);

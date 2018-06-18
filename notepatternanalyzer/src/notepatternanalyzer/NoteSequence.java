@@ -18,7 +18,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	private NoteClusterNode root;
 	
 	// MetaData
-	private int ppq = 480;	// Seemingly Musescore's default
+	private int ppq = 96;	// Seemingly the default value, but musescore's is 480
 	
 	/**
 	 * Node that holds note data
@@ -155,7 +155,8 @@ public class NoteSequence implements Iterable<NoteCluster> {
 			        	eventList.put(timestamp, events);
 			        }
 			    } catch(NumberFormatException e) {
-			    	if (parts[0] == "MFile") {
+			    	System.out.println(line);
+			    	if (parts[0].equals("MFile")) {
 			    		try {
 			    			this.ppq = Integer.parseInt(parts[3]);
 			    		} catch (NumberFormatException e2) {
@@ -177,6 +178,14 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	 */
 	public int size() {
 		return size;
+	}
+	
+	/**
+	 * Accessor for pulses per quarter
+	 * @return ppq
+	 */
+	public int getPpq() {
+		return this.ppq;
 	}
 
 	public Iterator<NoteCluster> iterator() {
