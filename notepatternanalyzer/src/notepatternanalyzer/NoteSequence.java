@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import notepatternanalyzer.HeldNote;
+import notepatternanalyzer.KeySignature;
+
 /**
  * Prototype data structure to store and iterate over note sequences
  */
@@ -19,6 +22,9 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	
 	// MetaData
 	private int ppq = 96;	// Seemingly the default value, but musescore's is 480
+	private boolean probablyMusescore = true;
+	
+	private List<HeldNote> notes;
 	
 	/**
 	 * Node that holds note data
@@ -56,7 +62,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	public NoteSequence(File file) throws IOException {
 		
 		// Get data in a readable format from the file
-		TreeMap<Integer, List<List<String>>> eventList = parseMidiText(file);
+		List<TreeMap<Integer, List<List<String>>>> trackList = parseMidiText(file);
 		
 		// Set the default values
 		int time = 0;
@@ -65,9 +71,10 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		int bpb = 4;
 		int beatNote = 4;
 		NoteClusterNode prev = null;
+		HeldNote[] heldNotes = new HeldNote[109];
 		
 		// Iterate through the data to fill the nodes
-		for (Map.Entry<Integer, List<List<String>>> entry : eventList.entrySet()) {
+		for (Map.Entry<Integer, List<List<String>>> entry : trackList.get(0).entrySet()) {
 	        int timestamp = entry.getKey();
 	        List<List<String>> events = entry.getValue();
 	        
@@ -89,8 +96,10 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        		break;
 	        	case "On":
 	        		if (event.contains("v=0")) {
+	        			//System.out.println("Note Off");
 	        			offNotes.add(Integer.parseInt(event.get(2).substring(2)));
 	        		} else {
+	        			//System.out.println("Note On");
 	        			onNotes.add(Integer.parseInt(event.get(2).substring(2)));
 	        		}
 	        		break;
@@ -121,23 +130,35 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	/**
 	 * Parses a mf2t txt file and retrives the note data
 	 * @param file the file to parse
-	 * @return a map in the form [timestamp]: {{Tag, args...}, ...}
+	 * @return a list of maps in the form [timestamp]: {{Tag, args...}, ...}, each representing a track.
+	 * 		   The first entry will contain all events.
 	 * @throws IOException
 	 */
-	public TreeMap<Integer, List<List<String>>> parseMidiText(File file) throws IOException {
+	public List<TreeMap<Integer, List<List<String>>>> parseMidiText(File file) throws IOException {
 		// Parse the file for only the lines that matter
 		FileReader fr = new FileReader(file);
 		BufferedReader br = new BufferedReader(fr);
 		
 		// This data structure is weird, but I think it will work fine
+		List<TreeMap<Integer, List<List<String>>>> trackList = new ArrayList<>();
 		TreeMap<Integer, List<List<String>>> eventList = new TreeMap<>();
+		TreeMap<Integer, List<List<String>>> currTrackNotes = new TreeMap<>();
+		trackList.add(eventList);
+		
+		// Read the lines one by one
+		boolean notesInTrack = false;
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] parts = line.split(" ");
-			if (parts.length >= 2) {
+			if (parts.length > 0) {
 			    try {
+			    	// Check for timestamped events
 			        int timestamp = Integer.parseInt(parts[0]);
+			        
+			        // Capture interesting timestamped events
 			        if (Arrays.asList(InterestingTags).contains(parts[1])) {
+			        	
+			        	// Initialize list to existing list, or initialize new list
 			        	List<List<String>> events;
 			        	if (!eventList.containsKey(timestamp)) {
 			        		events = new LinkedList<>();
@@ -145,31 +166,65 @@ public class NoteSequence implements Iterable<NoteCluster> {
 			        		events = eventList.get(timestamp);
 			        	}
 			        	
+			        	// Parse the event tags into a list
 			        	List<String> eventTags = new ArrayList<>();
 			        	for (int i = 1; i < parts.length; i++) {
 			        		eventTags.add(parts[i]);
 			        	}
 			        	
-			        	// Yeah... when I'm tired, I build weird data structures
 			        	events.add(eventTags);
 			        	eventList.put(timestamp, events);
+			        	
+			        	// Capture note events into note track
+			        	if (parts[1].equals("On") || parts[1].equals("Off")) {
+			        		// do the same
+			        		List<List<String>> trackEvents;
+				        	if (!currTrackNotes.containsKey(timestamp)) {
+				        		trackEvents = new LinkedList<>();
+				        	} else {
+				        		trackEvents = currTrackNotes.get(timestamp);
+				        	}
+				        	
+				        	trackEvents.add(eventTags);
+				        	currTrackNotes.put(timestamp, trackEvents);
+				        	
+				        	notesInTrack = true;
+				        }
+			        	
+			        	// Part of the Musescore detection
+			        	if (parts[1].equals("Off")) this.probablyMusescore = false;
 			        }
 			    } catch(NumberFormatException e) {
-			    	System.out.println(line);
+			    	
+			    	// Catch non-timestamped events
 			    	if (parts[0].equals("MFile")) {
+			    		// Catch file header
 			    		try {
+			    			
+			    			// Capture the ppq value
 			    			this.ppq = Integer.parseInt(parts[3]);
 			    		} catch (NumberFormatException e2) {
 			    			continue;
 			    		}
+			    	} else if (parts[0].equals("TrkEnd") && notesInTrack) {
+			    		// Catch the end of track
+			    		// Push the current track and start a new one
+			    		System.out.println("Read " + currTrackNotes.size() + " notes into track " + trackList.size());
+			    		trackList.add(currTrackNotes);
+			    		currTrackNotes = new TreeMap<>();
+			    		notesInTrack = false;
 			    	}
 			    }
 			}
 		}
+		System.out.println(eventList.size() + " events total");
+		
+		// Another point of musescore detection
+		if (this.ppq != 480) this.probablyMusescore = false;
 		
 		br.close();
 		
-		return eventList;
+		return trackList;
 	}
 	
 	/**
@@ -188,6 +243,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		return this.ppq;
 	}
 
+	@Override
 	public Iterator<NoteCluster> iterator() {
 		return new NoteIterator(root);
 	}

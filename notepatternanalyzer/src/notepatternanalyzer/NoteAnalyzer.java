@@ -71,7 +71,7 @@ class NoteAnalyzer {
 	}
 	
 	public static void main(String[] args) {
-		NoteAnalyzer na = new NoteAnalyzer(new File("data/animenzSample1.txt"));
+		NoteAnalyzer na = new NoteAnalyzer(new File("data/theishterSample2.txt"));
 		
 		NoteSequence ns;
 		try {

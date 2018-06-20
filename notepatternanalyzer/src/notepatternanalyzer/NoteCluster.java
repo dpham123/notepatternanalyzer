@@ -3,6 +3,13 @@ package notepatternanalyzer;
 import java.util.List;
 import java.util.TreeSet;
 
+import notepatternanalyzer.KeySignature;
+import notepatternanalyzer.Note;
+
+/**
+ * Class that represents a "cross section" of a sequence of notes.
+ * @author Alumina
+ */
 class NoteCluster {
     
 	// Primitive data
@@ -87,6 +94,10 @@ class NoteCluster {
 		this.duration = duration;
 	}
 	
+	public int getDuration() {
+		return duration;
+	}
+	
 	int getTimeStamp() {
 		return timestamp;
 	}
@@ -105,8 +116,8 @@ class NoteCluster {
 	
 	@Override
 	public String toString() {
-		String ret = timestamp + "~" + (float)duration / ppq / 4 + ": ";
-		
+		//String ret = timestamp + "~" + (float)duration / ppq / 4 + ": ";
+		String ret = timestamp + "~" + duration + ": ";
 		for (int octave = 0; octave < 9; octave++) {
 			for (int value = 0; value < 12; value++) {
 				if (newNotes[octave][value]) {
