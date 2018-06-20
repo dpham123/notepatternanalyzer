@@ -1,0 +1,122 @@
+MFile 1 2 480
+MTrk
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Par ch=1 c=121 v=0
+0 PrCh ch=1 p=0
+0 Par ch=1 c=7 v=100
+0 Par ch=1 c=10 v=64
+0 Par ch=1 c=91 v=0
+0 Par ch=1 c=93 v=0
+0 Meta 0x21 00
+13440 On ch=1 n=60 v=80
+13895 On ch=1 n=60 v=0
+13920 On ch=1 n=62 v=80
+14375 On ch=1 n=62 v=0
+14400 On ch=1 n=64 v=80
+14855 On ch=1 n=64 v=0
+14880 On ch=1 n=65 v=80
+15335 On ch=1 n=65 v=0
+15360 On ch=1 n=67 v=80
+15815 On ch=1 n=67 v=0
+15840 On ch=1 n=69 v=80
+16295 On ch=1 n=69 v=0
+16320 On ch=1 n=71 v=80
+16775 On ch=1 n=71 v=0
+17280 On ch=1 n=72 v=80
+17735 On ch=1 n=72 v=0
+17760 On ch=1 n=74 v=80
+18215 On ch=1 n=74 v=0
+18240 On ch=1 n=76 v=80
+18695 On ch=1 n=76 v=0
+18720 On ch=1 n=77 v=80
+19175 On ch=1 n=77 v=0
+19200 On ch=1 n=79 v=80
+19655 On ch=1 n=79 v=0
+19680 On ch=1 n=81 v=80
+20135 On ch=1 n=81 v=0
+20160 On ch=1 n=83 v=80
+20615 On ch=1 n=83 v=0
+21120 On ch=1 n=84 v=80
+21575 On ch=1 n=84 v=0
+21600 On ch=1 n=86 v=80
+22055 On ch=1 n=86 v=0
+22080 On ch=1 n=88 v=80
+22535 On ch=1 n=88 v=0
+22560 On ch=1 n=89 v=80
+23015 On ch=1 n=89 v=0
+23040 On ch=1 n=91 v=80
+23495 On ch=1 n=91 v=0
+23520 On ch=1 n=93 v=80
+23975 On ch=1 n=93 v=0
+24000 On ch=1 n=95 v=80
+24455 On ch=1 n=95 v=0
+24960 On ch=1 n=96 v=80
+25415 On ch=1 n=96 v=0
+25440 On ch=1 n=98 v=80
+25895 On ch=1 n=98 v=0
+25920 On ch=1 n=100 v=80
+26375 On ch=1 n=100 v=0
+26400 On ch=1 n=101 v=80
+26855 On ch=1 n=101 v=0
+26880 On ch=1 n=103 v=80
+27335 On ch=1 n=103 v=0
+27360 On ch=1 n=105 v=80
+27815 On ch=1 n=105 v=0
+27840 On ch=1 n=107 v=80
+28295 On ch=1 n=107 v=0
+28800 On ch=1 n=108 v=80
+29255 On ch=1 n=108 v=0
+29256 Meta TrkEnd
+TrkEnd
+MTrk
+0 KeySig 0 major
+0 Meta 0x21 00
+0 On ch=1 n=21 v=80
+455 On ch=1 n=21 v=0
+480 On ch=1 n=23 v=80
+935 On ch=1 n=23 v=0
+1920 On ch=1 n=24 v=80
+2375 On ch=1 n=24 v=0
+2400 On ch=1 n=26 v=80
+2855 On ch=1 n=26 v=0
+2880 On ch=1 n=28 v=80
+3335 On ch=1 n=28 v=0
+3360 On ch=1 n=29 v=80
+3815 On ch=1 n=29 v=0
+3840 On ch=1 n=31 v=80
+4295 On ch=1 n=31 v=0
+4320 On ch=1 n=33 v=80
+4775 On ch=1 n=33 v=0
+4800 On ch=1 n=35 v=80
+5255 On ch=1 n=35 v=0
+5760 On ch=1 n=36 v=80
+6215 On ch=1 n=36 v=0
+6240 On ch=1 n=38 v=80
+6695 On ch=1 n=38 v=0
+6720 On ch=1 n=40 v=80
+7175 On ch=1 n=40 v=0
+7200 On ch=1 n=41 v=80
+7655 On ch=1 n=41 v=0
+7680 On ch=1 n=43 v=80
+8135 On ch=1 n=43 v=0
+8160 On ch=1 n=45 v=80
+8615 On ch=1 n=45 v=0
+8640 On ch=1 n=47 v=80
+9095 On ch=1 n=47 v=0
+9600 On ch=1 n=48 v=80
+10055 On ch=1 n=48 v=0
+10080 On ch=1 n=50 v=80
+10535 On ch=1 n=50 v=0
+10560 On ch=1 n=52 v=80
+11015 On ch=1 n=52 v=0
+11040 On ch=1 n=53 v=80
+11495 On ch=1 n=53 v=0
+11520 On ch=1 n=55 v=80
+11975 On ch=1 n=55 v=0
+12000 On ch=1 n=57 v=80
+12455 On ch=1 n=57 v=0
+12480 On ch=1 n=59 v=80
+12935 On ch=1 n=59 v=0
+12936 Meta TrkEnd
+TrkEnd

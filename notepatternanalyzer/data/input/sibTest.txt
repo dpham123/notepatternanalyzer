@@ -1,0 +1,39 @@
+MFile 1 2 960
+MTrk
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Tempo 600000
+0 Meta Copyright "Copyright © "
+1 Meta TrkEnd
+TrkEnd
+MTrk
+0 PrCh ch=1 p=0
+0 Par ch=1 c=121 v=0
+0 Par ch=1 c=64 v=0
+0 Par ch=1 c=91 v=48
+0 Par ch=1 c=10 v=51
+0 Par ch=1 c=7 v=100
+0 On ch=1 n=72 v=76
+0 Par ch=1 c=121 v=0
+0 Par ch=1 c=64 v=0
+0 Par ch=1 c=91 v=48
+0 Par ch=1 c=10 v=51
+0 Par ch=1 c=7 v=100
+0 Meta TrkName "Piano"
+960 Off ch=1 n=72 v=0
+960 On ch=1 n=72 v=76
+1920 Off ch=1 n=72 v=0
+1920 On ch=1 n=72 v=76
+2880 Off ch=1 n=72 v=0
+2880 On ch=1 n=72 v=76
+3840 Off ch=1 n=72 v=0
+3840 On ch=1 n=72 v=76
+4800 Off ch=1 n=72 v=0
+4800 On ch=1 n=72 v=76
+5760 Off ch=1 n=72 v=0
+5760 On ch=1 n=72 v=76
+6720 Off ch=1 n=72 v=0
+6720 On ch=1 n=72 v=76
+7680 Off ch=1 n=72 v=0
+7681 Meta TrkEnd
+TrkEnd
