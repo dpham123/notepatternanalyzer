@@ -1,10 +1,9 @@
 package notepatternanalyzer;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.TreeSet;
-
-import notepatternanalyzer.KeySignature;
-import notepatternanalyzer.Note;
 
 /**
  * Class that represents a "cross section" of a sequence of notes.
@@ -17,6 +16,9 @@ class NoteCluster {
 	private boolean[][] newNotes = new boolean[9][12];
 	private int duration = 0;
     
+	// new stuff
+	List<HeldNote> heldNotes, releasedNotes, pressedNotes;
+	
 	// More "meta" data
 	private KeySignature keySig;
 	private int tempo;
@@ -27,6 +29,9 @@ class NoteCluster {
 	
 	/**
 	 * Constructor with full parameters
+	 * 
+	 * SHOULD BE DEPRECATED
+	 * 
 	 * @param prev the preceding note cluster
 	 * @param onNotes a list of the notes being turned on
 	 * @param offNotes a list of the notes being turned off
@@ -44,9 +49,58 @@ class NoteCluster {
 		for (int note : offNotes) {
 			setNote(note, false);
 		}
-		
+
 		for (int note : onNotes) {
 			setNote(note, true);
+		}
+		
+		this.timestamp = timestamp;
+		this.keySig = keySig;
+		this.tempo = Math.round(60000000 / tempo);
+		this.bpb = bpb;
+		this.beatNote = beatNote;
+		this.ppq = ppq;
+	}
+	
+	/**
+	 * pls don't ask
+	 * @param prevNotes
+	 * @param currNotes
+	 * @param timestamp
+	 * @param keySig
+	 * @param tempo
+	 * @param bpb
+	 * @param beatNote
+	 * @param ppq
+	 */
+	public NoteCluster(List<HeldNote> prevNotes, List<HeldNote> currNotes, int timestamp, KeySignature keySig, float tempo, int bpb, int beatNote, int ppq) {
+		
+		heldNotes = new ArrayList<>();
+		releasedNotes = new ArrayList<>();
+		pressedNotes = new ArrayList<>();
+		
+		// get the held notes from previous notes not released at timestamp
+		for (HeldNote note : prevNotes) {
+			if (note.getEndTime() != timestamp) {
+				this.setNote(note.getRawValue());
+				this.heldNotes.add(note);
+			}
+		}
+		
+		// add all the notes to get the new notes
+		for (HeldNote note : currNotes) {
+			if (note.getStartTime() == timestamp) {
+				this.setNote(note.getRawValue(), true);
+				this.heldNotes.add(note);
+				this.pressedNotes.add(note);
+			}
+		}
+		
+		// do opposite of first loop to get released notes
+		for (HeldNote note : prevNotes) {
+			if (note.getEndTime() == timestamp) {
+				this.releasedNotes.add(note);
+			}
 		}
 		
 		this.timestamp = timestamp;
@@ -90,6 +144,13 @@ class NoteCluster {
 		this.newNotes[octave][value] = on;
 	}
 	
+	private void setNote(int rawValue) {
+		int octave = rawValue / 12 - 1;
+		int value = rawValue % 12;
+		
+		this.notes[octave][value] = true;
+	}
+	
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
@@ -98,26 +159,38 @@ class NoteCluster {
 		return duration;
 	}
 	
-	int getTimeStamp() {
+	public int getTimeStamp() {
 		return timestamp;
 	}
 	
-	int getTempo(){
+	public KeySignature getKeySignature() {
+		return keySig;
+	}
+	
+	public int getTempo(){
 		return tempo;
 	}
 	
-	int getBpb() {
+	public int getBpb() {
 		return bpb;
 	}
 	
-	int getBeatNote() {
+	public int getBeatNote() {
 		return beatNote;
+	}
+	
+	public List<HeldNote> getNotes() {
+		return heldNotes;
+	}
+	
+	public List<HeldNote> getReleasedNotes() {
+		return releasedNotes;
 	}
 	
 	@Override
 	public String toString() {
-		//String ret = timestamp + "~" + (float)duration / ppq / 4 + ": ";
-		String ret = timestamp + "~" + duration + ": ";
+		String ret = timestamp + "~" + (float)duration / ppq / 4 + ": ";
+		//String ret = timestamp + "~" + duration + ": ";
 		for (int octave = 0; octave < 9; octave++) {
 			for (int value = 0; value < 12; value++) {
 				if (newNotes[octave][value]) {
@@ -127,6 +200,15 @@ class NoteCluster {
 				}
 			}
 		}
+		 ret += "| ";
+		for (HeldNote n : heldNotes) {
+			ret += n.getNote() + "_" + n.getOctave() + " ";
+		}
+		ret += "| ";
+		for (HeldNote n : releasedNotes) {
+			ret += n.getNote() + "_" + n.getOctave() + " ";
+		}
+		
 		
 		return ret;
 	}

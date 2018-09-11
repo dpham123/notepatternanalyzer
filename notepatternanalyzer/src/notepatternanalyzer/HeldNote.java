@@ -3,18 +3,31 @@ package notepatternanalyzer;
 public class HeldNote {
 	private int timestamp;
 	private int value;
-	private int duration;
-	private KeySignature keySig;
+	private int duration = 0;
 	
-	public HeldNote(int timestamp, int value) {
-		this(timestamp, value, 0, KeySignature.C);
+	private KeySignature keySig = KeySignature.C;
+	private int tempo = 500000;
+	private int bpb = 4;
+	private int beatNote = 4;
+	private int ppq = 96;
+	
+	public HeldNote(HeldNote n) {
+		this(n.timestamp, n.value, n.duration, n.keySig, n.tempo, n.bpb, n.beatNote, n.ppq);
 	}
 	
-	public HeldNote(int timestamp, int value, int duration, KeySignature keySig) {
+	public HeldNote(int timestamp, int value, KeySignature keySig, int tempo, int bpb, int beatNote, int ppq) {
+		this(timestamp, value, 0, keySig, tempo, bpb, beatNote, ppq);
+	}
+	
+	public HeldNote(int timestamp, int value, int duration, KeySignature keySig, int tempo, int bpb, int beatNote, int ppq) {
 		this.timestamp = timestamp;
 		this.value = value;
 		this.duration = duration;
 		this.keySig = keySig;
+		this.tempo = tempo;
+		this.bpb = bpb;
+		this.beatNote = beatNote;
+		this.ppq = ppq;
 	}
 	
 	public int getStartTime() {
@@ -41,6 +54,10 @@ public class HeldNote {
 		return duration;
 	}
 	
+	public void setTimestamp(int timestamp) {
+		this.timestamp = timestamp;
+	}
+	
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
@@ -49,6 +66,18 @@ public class HeldNote {
 		if (getMusescoreDuration(this.duration) != -1) {
 			this.duration = getMusescoreDuration(this.duration);
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof HeldNote) {
+			return ((HeldNote) o).getRawValue() == this.getRawValue();
+		}
+		return false;
+	}
+	
+	public String toString() {
+		return "[" + this.getNote() + "_" + this.getOctave() + ":" + (duration == 0 ? "?" : (duration / ppq / 4)) + "]";
 	}
 	
 	private static int getMusescoreDuration(int ticks) {
@@ -103,5 +132,9 @@ public class HeldNote {
 			return 3840;
 		}
 		return -1;
+	}
+
+	public int getEndTime() {
+		return timestamp + duration;
 	}
 }
