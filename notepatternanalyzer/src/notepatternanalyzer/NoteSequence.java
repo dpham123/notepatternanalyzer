@@ -13,6 +13,16 @@ import notepatternanalyzer.KeySignature;
  * Prototype data structure to store and iterate over note sequences
  */
 public class NoteSequence implements Iterable<NoteCluster> {
+	
+	public class HeldNoteTemp {
+		public int value;
+		public int track;
+		
+		public HeldNoteTemp(int value, int track) {
+			this.value = value;
+			this.track = track;
+		}
+	}
 
 
 	// Constants and variables
@@ -78,8 +88,8 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        int timestamp = entry.getKey();
 	        List<List<String>> events = entry.getValue();
 	        
-	        List<Integer> onNotes = new LinkedList<>();
-	        List<Integer> offNotes = new LinkedList<>();
+	        List<HeldNoteTemp> onNotes = new LinkedList<>();
+	        List<HeldNoteTemp> offNotes = new LinkedList<>();
 	        
 	        for (List<String> event : events) {
 	        	switch (event.get(0)) {
@@ -97,14 +107,14 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        	case "On":
 	        		if (event.contains("v=0")) {
 	        			//System.out.println("Note Off");
-	        			offNotes.add(Integer.parseInt(event.get(2).substring(2)));
+	        			offNotes.add(new HeldNoteTemp(Integer.parseInt(event.get(2).substring(2)), 0));
 	        		} else {
 	        			//System.out.println("Note On");
-	        			onNotes.add(Integer.parseInt(event.get(2).substring(2)));
+	        			onNotes.add(new HeldNoteTemp(Integer.parseInt(event.get(2).substring(2)), Integer.parseInt(event.get(4))));
 	        		}
 	        		break;
 	        	case "Off":
-        			offNotes.add(Integer.parseInt(event.get(2).substring(2)));
+        			offNotes.add(new HeldNoteTemp(Integer.parseInt(event.get(2).substring(2)), 0));
 	        		break;
 	        	default:
 	        		break;
@@ -148,6 +158,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		// Read the lines one by one
 		boolean notesInTrack = false;
 		String line;
+		int track = 1;
 		while ((line = br.readLine()) != null) {
 			String[] parts = line.split(" ");
 			if (parts.length > 0) {
@@ -185,6 +196,8 @@ public class NoteSequence implements Iterable<NoteCluster> {
 				        		trackEvents = currTrackNotes.get(timestamp);
 				        	}
 				        	
+				        	eventTags.add("" + track);
+				        	
 				        	trackEvents.add(eventTags);
 				        	currTrackNotes.put(timestamp, trackEvents);
 				        	
@@ -213,6 +226,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 			    		trackList.add(currTrackNotes);
 			    		currTrackNotes = new TreeMap<>();
 			    		notesInTrack = false;
+			    		track++;
 			    	}
 			    }
 			}
