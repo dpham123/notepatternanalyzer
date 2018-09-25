@@ -1,6 +1,10 @@
 package notepatternanalyzer;
 
-public class HeldNote {
+import java.util.Comparator;
+
+public class HeldNote implements Comparable<HeldNote> {
+	
+	private int track;
 	private int timestamp;
 	private int value;
 	private int duration = 0;
@@ -12,14 +16,15 @@ public class HeldNote {
 	private int ppq = 96;
 	
 	public HeldNote(HeldNote n) {
-		this(n.timestamp, n.value, n.duration, n.keySig, n.tempo, n.bpb, n.beatNote, n.ppq);
+		this(n.timestamp, n.value, n.duration, n.keySig, n.tempo, n.bpb, n.beatNote, n.ppq, n.track);
 	}
 	
-	public HeldNote(int timestamp, int value, KeySignature keySig, int tempo, int bpb, int beatNote, int ppq) {
-		this(timestamp, value, 0, keySig, tempo, bpb, beatNote, ppq);
+	public HeldNote(int timestamp, int value, KeySignature keySig, int tempo, int bpb, int beatNote, int ppq, int track) {
+		this(timestamp, value, 0, keySig, tempo, bpb, beatNote, ppq, track);
 	}
 	
-	public HeldNote(int timestamp, int value, int duration, KeySignature keySig, int tempo, int bpb, int beatNote, int ppq) {
+	public HeldNote(int timestamp, int value, int duration, KeySignature keySig, int tempo, int bpb, int beatNote, int ppq, int track) {
+		this.track = track;
 		this.timestamp = timestamp;
 		this.value = value;
 		this.duration = duration;
@@ -28,6 +33,10 @@ public class HeldNote {
 		this.bpb = bpb;
 		this.beatNote = beatNote;
 		this.ppq = ppq;
+	}
+	
+	public int getTrack() {
+		return track;
 	}
 	
 	public int getStartTime() {
@@ -77,7 +86,8 @@ public class HeldNote {
 	}
 	
 	public String toString() {
-		return "[" + this.getNote() + "_" + this.getOctave() + ":" + (duration == 0 ? "?" : (duration / ppq / 4)) + "]";
+//		return "[" + this.getNote() + "_" + this.getOctave() + ":" + (duration == 0 ? "?" : (asFraction(duration, ppq * 4))) + "]";
+		return this.getNote() + "_" + this.getOctave();
 	}
 	
 	private static int getMusescoreDuration(int ticks) {
@@ -116,6 +126,8 @@ public class HeldNote {
 			return 720;
 		case 911:	// 1/2
 			return 960;
+		case 1139:  // 5/8
+			return 1200;
 		case 1367:	// 3/4
 			return 1440;
 		case 1823:	// 1
@@ -133,8 +145,22 @@ public class HeldNote {
 		}
 		return -1;
 	}
+	
+	private static long gcm(long a, long b) {
+	    return b == 0 ? a : gcm(b, a % b); // Not bad for one line of code :)
+	}
+
+	private static String asFraction(long a, long b) {
+	    long gcm = gcm(a, b);
+	    return (a / gcm) + "/" + (b / gcm);
+	}
 
 	public int getEndTime() {
 		return timestamp + duration;
+	}
+
+	@Override
+	public int compareTo(HeldNote n) {
+		return this.getRawValue() - n.getRawValue();
 	}
 }

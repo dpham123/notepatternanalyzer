@@ -2,6 +2,7 @@ package notepatternanalyzer;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
@@ -12,12 +13,12 @@ import java.util.TreeSet;
 class NoteCluster {
     
 	// Primitive data
-	private boolean[][] notes = new boolean[9][12];
-	private boolean[][] newNotes = new boolean[9][12];
+	private HeldNote[][] notes = new HeldNote[9][12];
+	private HeldNote[][] newNotes = new HeldNote[9][12];
 	private int duration = 0;
     
 	// new stuff
-	List<HeldNote> heldNotes, releasedNotes, pressedNotes;
+	List<HeldNote> heldNotes, releasedNotes;//, pressedNotes;
 	
 	// More "meta" data
 	private KeySignature keySig;
@@ -26,41 +27,6 @@ class NoteCluster {
 	private int bpb;
 	private int beatNote;
 	private int timestamp;
-	
-	/**
-	 * Constructor with full parameters
-	 * 
-	 * SHOULD BE DEPRECATED
-	 * 
-	 * @param prev the preceding note cluster
-	 * @param onNotes a list of the notes being turned on
-	 * @param offNotes a list of the notes being turned off
-	 * @param duration the duration
-	 */
-	public NoteCluster(NoteCluster prev, List<Integer> onNotes, List<Integer> offNotes, int timestamp, KeySignature keySig, float tempo, int bpb, int beatNote, int ppq) {
-		if (prev != null) {
-			for (int octave = 0; octave < 9; octave++) {
-				for (int value = 0; value < 12; value++) {
-					notes[octave][value] = prev.noteOn(value, octave);
-				}
-			}
-		}
-		
-		for (int note : offNotes) {
-			setNote(note, false);
-		}
-
-		for (int note : onNotes) {
-			setNote(note, true);
-		}
-		
-		this.timestamp = timestamp;
-		this.keySig = keySig;
-		this.tempo = Math.round(60000000 / tempo);
-		this.bpb = bpb;
-		this.beatNote = beatNote;
-		this.ppq = ppq;
-	}
 	
 	/**
 	 * pls don't ask
@@ -77,12 +43,14 @@ class NoteCluster {
 		
 		heldNotes = new ArrayList<>();
 		releasedNotes = new ArrayList<>();
-		pressedNotes = new ArrayList<>();
+		//pressedNotes = new ArrayList<>();
+		
+		// This section here can definitely be shortened somehow
 		
 		// get the held notes from previous notes not released at timestamp
 		for (HeldNote note : prevNotes) {
 			if (note.getEndTime() != timestamp) {
-				this.setNote(note.getRawValue());
+				this.setNote(note, false);
 				this.heldNotes.add(note);
 			}
 		}
@@ -90,9 +58,9 @@ class NoteCluster {
 		// add all the notes to get the new notes
 		for (HeldNote note : currNotes) {
 			if (note.getStartTime() == timestamp) {
-				this.setNote(note.getRawValue(), true);
+				this.setNote(note, true);
 				this.heldNotes.add(note);
-				this.pressedNotes.add(note);
+				//this.pressedNotes.add(note);
 			}
 		}
 		
@@ -109,6 +77,9 @@ class NoteCluster {
 		this.bpb = bpb;
 		this.beatNote = beatNote;
 		this.ppq = ppq;
+
+		Collections.sort(heldNotes);
+		Collections.sort(releasedNotes);
 	}
 	
 	/**
@@ -118,7 +89,7 @@ class NoteCluster {
 	 * @return boolean of whether note is on
 	 */
 	public boolean noteOn(int value, int octave) {
-		return notes[octave][value];
+		return notes[octave][value] != null;
 	}
 	
 	/**
@@ -128,7 +99,27 @@ class NoteCluster {
 	 * @return boolean of whether note is on
 	 */
 	public boolean noteOn(Note note, int octave) {
-		return notes[octave][note.getValue()];
+		return notes[octave][note.getValue()] != null;
+	}
+	
+	/**
+	 * Gets the track of the note
+	 * @param value the value [0,11] of the note to check
+	 * @param octave the octave to check
+	 * @return track or -1 if no note
+	 */
+	public int getTrack(int value, int octave) {
+		return notes[octave][value] != null ? notes[octave][value].getTrack() : -1;
+	}
+	
+	/**
+	 * Gets the track of the note
+	 * @param note the note to check
+	 * @param octave the octave to check
+	 * @return track
+	 */
+	public int getTrack(Note note, int octave) {
+		return notes[octave][note.getValue()] != null ? notes[octave][note.getValue()].getTrack() : -1;
 	}
 	
 	/**
@@ -136,19 +127,12 @@ class NoteCluster {
 	 * @param rawValue the raw value of the note
 	 * @param on the boolean we're seting the note to
 	 */
-	private void setNote(int rawValue, boolean on) {
-		int octave = rawValue / 12 - 1;
-		int value = rawValue % 12;
+	private void setNote(HeldNote n, boolean newNote) {
+		int octave = n.getRawValue() / 12 - 1;
+		int value = n.getRawValue() % 12;
 		
-		this.notes[octave][value] = on;
-		this.newNotes[octave][value] = on;
-	}
-	
-	private void setNote(int rawValue) {
-		int octave = rawValue / 12 - 1;
-		int value = rawValue % 12;
-		
-		this.notes[octave][value] = true;
+		this.notes[octave][value] = n;
+		if (newNote) this.newNotes[octave][value] = n;
 	}
 	
 	public void setDuration(int duration) {
@@ -187,28 +171,33 @@ class NoteCluster {
 		return releasedNotes;
 	}
 	
+	private static long gcm(long a, long b) {
+	    return b == 0 ? a : gcm(b, a % b); // Not bad for one line of code :)
+	}
+
+	private static String asFraction(long a, long b) {
+	    long gcm = gcm(a, b);
+	    return (a / gcm) + "/" + (b / gcm);
+	}
+	
 	@Override
 	public String toString() {
-		String ret = timestamp + "~" + (float)duration / ppq / 4 + ": ";
-		//String ret = timestamp + "~" + duration + ": ";
-		for (int octave = 0; octave < 9; octave++) {
-			for (int value = 0; value < 12; value++) {
-				if (newNotes[octave][value]) {
-					ret += "*" + Note.getNote(value, keySig) + "_" + octave + "* ";
-				} else if (notes[octave][value]) {
-					ret += "" + Note.getNote(value, keySig) + "_" + octave + " ";
-				}
-			}
-		}
-		 ret += "| ";
-		for (HeldNote n : heldNotes) {
-			ret += n.getNote() + "_" + n.getOctave() + " ";
-		}
-		ret += "| ";
-		for (HeldNote n : releasedNotes) {
-			ret += n.getNote() + "_" + n.getOctave() + " ";
-		}
+		String ret = timestamp + "~" + asFraction(duration, ppq * 4) + ": ";
+
+		int track = -1;
 		
+		for (HeldNote n : heldNotes) {
+			if (n.getTrack() != track) {
+				if (track != -1) {
+					ret += "] ";
+				}
+				track = n.getTrack();
+				ret += "(" + track + ")[ ";
+			}
+			if (n.getStartTime() == timestamp) ret += "*" + n + "* ";
+			else ret += n + " ";
+		}
+		if (track != -1) ret += "]";
 		
 		return ret;
 	}

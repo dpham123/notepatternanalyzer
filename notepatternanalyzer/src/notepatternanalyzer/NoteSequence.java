@@ -49,7 +49,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		for (int i = 1; i < trackList.size(); i++) {
 			
 			// Set up the track
-			NoteTrack currTrack = new NoteTrack(ppq, probablyMusescore);
+			NoteTrack currTrack = new NoteTrack(i, ppq, probablyMusescore);
 			tracks.add(currTrack);
 			
 			// Set up the event iterator
@@ -103,7 +103,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 	        	for (List<String> event : noteEvents) {
 		        	switch (event.get(0)) {
 		        	case "On":
-		        		currTrack.NoteOn(timestamp, Integer.parseInt(event.get(2).substring(2)));
+		        		currTrack.NoteOn(timestamp, Integer.parseInt(event.get(2).substring(2)), i);
 		        		break;
 		        	case "Off":
 		        		currTrack.NoteOff(timestamp, Integer.parseInt(event.get(2).substring(2)));
@@ -113,7 +113,11 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		        	}
 		        }
 		    }
+			
+			// wrap up last notes
+			currTrack.cluster();
 		}
+		
 		
 		// combine all the tracks into the main track
 		if (tracks.size() == 1) {
@@ -121,9 +125,9 @@ public class NoteSequence implements Iterable<NoteCluster> {
 		} else {
 			for (int i = 1; i < tracks.size(); i++) {
 				if (i == 1) {
-					main = new NoteTrack(tracks.get(i - 1), tracks.get(i));
+					main = new NoteTrack(0, tracks.get(i - 1), tracks.get(i));
 				} else {
-					main = new NoteTrack(main, tracks.get(i));
+					main = new NoteTrack(0, main, tracks.get(i));
 				}
 			}
 		}

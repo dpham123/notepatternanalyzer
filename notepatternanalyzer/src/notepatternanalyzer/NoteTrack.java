@@ -15,6 +15,7 @@ import notepatternanalyzer.KeySignature;
 public class NoteTrack implements Iterable<NoteCluster> {
 
 	// Constants and variables
+	private int id;
 	private int size = 0;
 	private NoteClusterNode root;
 	
@@ -35,8 +36,8 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	 * Simple constructors are nice
 	 * @param ppq - pulses per quarter note
 	 */
-	public NoteTrack(int ppq) {
-		this(ppq, false);
+	public NoteTrack(int id, int ppq) {
+		this(id, ppq, false);
 	}
 	
 	/**
@@ -44,7 +45,8 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	 * @param ppq - pulses per quarter note
 	 * @param ms - false if not musescore
 	 */
-	public NoteTrack(int ppq, boolean ms) {
+	public NoteTrack(int id, int ppq, boolean ms) {
+		this.id = id;
 		this.currTime = 0;
 		this.prev = null;
 		this.notes = new LinkedList<>();
@@ -64,7 +66,8 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	 * @param t1
 	 * @param t2
 	 */
-	public NoteTrack(NoteTrack t1, NoteTrack t2) {
+	public NoteTrack(int id, NoteTrack t1, NoteTrack t2) {
+		this.id = id;
 		this.currTime = 0;
 		this.notes = new LinkedList<>();
 		this.currNotes = new ArrayList<>();
@@ -113,7 +116,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 				}
 				
 				for (HeldNote n : c1.getNotes()) {
-					this.NoteOn(n.getStartTime(), n.getRawValue(), true);
+					this.NoteOn(n.getStartTime(), n.getRawValue(), true, n.getTrack());
 				}
 				
 				// mark as available to take again
@@ -133,13 +136,16 @@ public class NoteTrack implements Iterable<NoteCluster> {
 				}
 				
 				for (HeldNote n : c2.getNotes()) {
-					this.NoteOn(n.getStartTime(), n.getRawValue(), true);
+					this.NoteOn(n.getStartTime(), n.getRawValue(), true, n.getTrack());
 				}
 				
 				// mark as available to take again
 				take2 = true;
 			}
 		}
+		
+		// wrap up
+		this.cluster();
 	}
 	
 	/**
@@ -156,6 +162,10 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	 */
 	public int getPpq() {
 		return this.ppq;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public List<HeldNote> getNotes() {
@@ -187,35 +197,26 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	 * @param timestamp
 	 * @param value
 	 */
-	public void NoteOn(int timestamp, int value) {
-		this.NoteOn(timestamp, value, false);
+	public void NoteOn(int timestamp, int value, int track) {
+		this.NoteOn(timestamp, value, false, track);
 	}
 	
-	public void NoteOn(int timestamp, int value, boolean safe) {
+	public void NoteOn(int timestamp, int value, boolean safe, int track) {
 		if (openNotes[value - FIRST_NOTE] == null || !safe) {
 			
 			// If new timestamp, register previous timestamp as a note cluster
 			if (timestamp > currTime) {
-//				for (HeldNote n : prevNotes) {
-//					System.out.print(n);
-//				}
-//				System.out.print("|");
-//				for (HeldNote n : currNotes) {
-//					System.out.print(n);
-//				}
+				curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
 				
 				if (prev != null) {
-					curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
 					prev.setNext(curr);
-					prev.getNotes().setDuration(timestamp - currTime);
 				} else {
-					curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
 					root = curr;
 				}
 				
-				//System.out.println(" " + currTime);
 				
 				// Update current
+				curr.getNotes().setDuration(timestamp - currTime);
 				prev = curr;
 				prevNotes = currNotes;
 				currNotes = copyNotes(currNotes);
@@ -228,8 +229,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 			}
 			
 			// Add the note
-			//System.out.print("+" + value + " ");
-			openNotes[value - FIRST_NOTE] = new HeldNote(timestamp, value, currKeySig, currTempo, currBpb, currBeatNote, ppq);
+			openNotes[value - FIRST_NOTE] = new HeldNote(timestamp, value, currKeySig, currTempo, currBpb, currBeatNote, ppq, track);
 			currNotes.add(openNotes[value - FIRST_NOTE]);
 			pressedNotes.add(openNotes[value - FIRST_NOTE]);
 		}
@@ -241,18 +241,8 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	 * @param value
 	 */
 	public void NoteOff(int timestamp, int value) {
-		
 		if (openNotes[value - FIRST_NOTE] != null) {
 			if (timestamp > currTime) {
-				//for (HeldNote n : prevNotes) {
-				//	System.out.print(n);
-				//}
-				//System.out.print("->");
-				//for (HeldNote n : currNotes) {
-				//	System.out.print(n);
-				//}
-				
-				//System.out.println(" " + currTime);
 				if (prev != null) {
 					curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
 					prev.setNext(curr);
@@ -283,19 +273,13 @@ public class NoteTrack implements Iterable<NoteCluster> {
 			size++;
 			
 			// Close off the note
-			//System.out.print("__" + currNotes.size() + "__");
 			openNotes[value - FIRST_NOTE] = null;
 			currNotes.remove(removedNote);
-			//System.out.print("__" + currNotes.size() + "__");
-			
-			//System.out.print("-" + value + " ");
 			
 			if (timestamp > currTime) {
-				if (prev != null) {
-					prev.getNotes().setDuration((removedNote.getStartTime() + removedNote.getDuration()) - currTime);
-				}
 				
 				// Update current
+				curr.getNotes().setDuration((removedNote.getStartTime() + removedNote.getDuration()) - currTime);
 				prev = curr;
 				currTime = removedNote.getStartTime() + removedNote.getDuration();
 				pressedNotes.clear();
@@ -303,10 +287,22 @@ public class NoteTrack implements Iterable<NoteCluster> {
 		}
 	}
 	
+	public void cluster() {
+		if (curr != null) {
+			curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
+			prev.setNext(curr);
+			curr.getNotes().setDuration(0);
+			prev = curr;
+			prevNotes = currNotes;
+			curr = null;
+			currNotes = null;
+		}
+	}
+	
 	private static List<HeldNote> copyNotes(List<HeldNote> notes) {
 		List<HeldNote> newNotes = new ArrayList<>();
 		for (HeldNote note : notes) {
-			newNotes.add(new HeldNote(note));
+			newNotes.add(note);
 		}
 		return newNotes;
 	}
