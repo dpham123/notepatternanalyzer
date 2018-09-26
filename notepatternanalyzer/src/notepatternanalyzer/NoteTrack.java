@@ -115,10 +115,6 @@ public class NoteTrack implements Iterable<NoteCluster> {
 					this.NoteOff(n.getEndTime(), n.getRawValue());
 				}
 				
-				for (HeldNote n : c1.getNotes()) {
-					this.NoteOn(n.getStartTime(), n.getRawValue(), true, n.getTrack());
-				}
-				
 				// mark as available to take again
 				take1 = true;
 			}
@@ -135,12 +131,19 @@ public class NoteTrack implements Iterable<NoteCluster> {
 					this.NoteOff(n.getEndTime(), n.getRawValue());
 				}
 				
+				// mark as available to take again
+				take2 = true;
+			}
+			
+			if (take1) {
+				for (HeldNote n : c1.getNotes()) {
+					this.NoteOn(n.getStartTime(), n.getRawValue(), true, n.getTrack());
+				}
+			}
+			if (take2) {
 				for (HeldNote n : c2.getNotes()) {
 					this.NoteOn(n.getStartTime(), n.getRawValue(), true, n.getTrack());
 				}
-				
-				// mark as available to take again
-				take2 = true;
 			}
 		}
 		
