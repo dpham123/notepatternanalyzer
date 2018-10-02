@@ -95,7 +95,7 @@ class NoteAnalyzer {
 	 * immediately before the specified note. Works only with midis with 2 tracks. 
 	 * If multiple notes are found in the same track, the highest note will be used.
 	 * @author UnknownEX1
-	 * @param notes The NoteCluster of notes
+	 * @param notes The NoteCluster of notes or 0 if no notes in track 1
 	 * @return relativeDistance The relative distance between the two notes
 	 */
 	private int calculateRelativeDistance(NoteCluster notes) {
@@ -110,6 +110,10 @@ class NoteAnalyzer {
 					highestHeldNote = hn;
 				}
 			}
+		}
+		
+		if (highestHeldNote.getTrack() == -1) {
+			return 0;
 		}
 		
 		int relativeDistance = highestHeldNote.getValue() - prevHeldNoteValue;
