@@ -130,7 +130,6 @@ class NoteCluster {
 	private void setNote(HeldNote n, boolean newNote) {
 		int octave = n.getRawValue() / 12 - 1;
 		int value = n.getRawValue() % 12;
-		
 		this.notes[octave][value] = n;
 		if (newNote) this.newNotes[octave][value] = n;
 	}

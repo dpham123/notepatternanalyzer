@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
 
 class NoteAnalyzer {
 	private File file;
+	private int prevHeldNoteValue = 0;
 	private int tempo;
 	private int bpb;
 	private int beatNote;
@@ -87,6 +90,47 @@ class NoteAnalyzer {
 			fw.close();
 		}
 	}
+	/**
+	 * Calculates distance between the note of a melody (track 1) and the note 
+	 * immediately before the specified note. Works only with midis with 2 tracks. 
+	 * If multiple notes are found in the same track, the highest note will be used.
+	 * @author UnknownEX1
+	 * @param notes The NoteCluster of notes
+	 * @return relativeDistance The relative distance between the two notes
+	 */
+	private int calculateRelativeDistance(NoteCluster notes) {
+		List<HeldNote> heldNotes = notes.getNotes();
+		HeldNote highestHeldNote = new HeldNote(0,0,KeySignature.C, 0, 
+				0, 0, 0, -1);
+		
+		// Finds the highest note of the notes in track 1
+		for (HeldNote hn : heldNotes) {
+			if (hn.getTrack() == 1) {
+				if (hn.getValue() > highestHeldNote.getValue()) {
+					highestHeldNote = hn;
+				}
+			}
+		}
+		
+		int relativeDistance = highestHeldNote.getValue() - prevHeldNoteValue;
+		prevHeldNoteValue = highestHeldNote.getValue();
+		return relativeDistance;
+	}
+	
+	private String printNotes(NoteCluster nc) {
+		// 86 was chosen to be the place to print the relative distances because
+		// the longest note cluster string length was 85.
+		String s = nc.toString();
+		int numberOfSpaces = 86 - s.length();
+				
+		// Appends spaces to print relative distances
+		for (int i = 0; i < numberOfSpaces; i++) {
+			s += " ";
+		}
+		
+		s += calculateRelativeDistance(nc);
+		return s;
+	}
 	
 	private void updateAlreadyPrinted(boolean alreadyPrinted) {
 		this.alreadyPrinted = alreadyPrinted;
@@ -98,8 +142,8 @@ class NoteAnalyzer {
 	
 	public static void main(String[] args) {
 		NoteAnalyzer na = new NoteAnalyzer(new File("data/input/theishterSample2.txt"));
-		
 		NoteSequence ns;
+		String textOnConsole = "";
 		try {
 			ns = new NoteSequence(na.file);
 			
@@ -107,7 +151,9 @@ class NoteAnalyzer {
 				na.printTimeSig(notes, ns);
 				na.printTempo(notes);
 				na.printMeasure(notes);
-				sop(notes);
+				
+				sop(na.printNotes(notes));
+				
 				na.printToFile(notes.toString());
 				na.updateAlreadyPrinted(false);
 			}
