@@ -105,8 +105,8 @@ class NoteAnalyzer {
 		
 		// Finds the highest note of the notes in track 1
 		for (HeldNote hn : heldNotes) {
-			if (hn.getTrack() == 1) {
-				if (hn.getValue() > highestHeldNote.getValue()) {
+			if (hn.getTrack() == 1 && hn.getStartTime() == notes.getTimeStamp()) {
+				if (hn.getRawValue() > highestHeldNote.getRawValue()) {
 					highestHeldNote = hn;
 				}
 			}
@@ -116,8 +116,8 @@ class NoteAnalyzer {
 			return 0;
 		}
 		
-		int relativeDistance = highestHeldNote.getValue() - prevHeldNoteValue;
-		prevHeldNoteValue = highestHeldNote.getValue();
+		int relativeDistance = highestHeldNote.getRawValue() - prevHeldNoteValue;
+		prevHeldNoteValue = highestHeldNote.getRawValue();
 		return relativeDistance;
 	}
 	
@@ -147,7 +147,6 @@ class NoteAnalyzer {
 	public static void main(String[] args) {
 		NoteAnalyzer na = new NoteAnalyzer(new File("data/input/theishterSample2.txt"));
 		NoteSequence ns;
-		String textOnConsole = "";
 		try {
 			ns = new NoteSequence(na.file);
 			
@@ -158,7 +157,7 @@ class NoteAnalyzer {
 				
 				sop(na.printNotes(notes));
 				
-				na.printToFile(notes.toString());
+				na.printToFile(na.printNotes(notes));
 				na.updateAlreadyPrinted(false);
 			}
 		} catch (IOException e) {
