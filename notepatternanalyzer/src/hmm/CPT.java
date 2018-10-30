@@ -1,5 +1,6 @@
 package hmm;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +8,17 @@ public class CPT {
 
 	private List<List<Double>> cpt;
 	private List<Boolean> normalized;
-	private int numToStates = 0;
+	private int numToStates = 0, numFromStates = 0;
 	private static final double correctionOffsetRatio = 0.2;
 	
 	public CPT() {
 		cpt = new ArrayList<List<Double>>();
 		normalized = new ArrayList<Boolean>();
+	}
+	
+	public CPT(String filename) {
+		this();
+		parse(new File(filename));
 	}
 	
 	public void addFromState(int toAdd) {
@@ -24,6 +30,7 @@ public class CPT {
 			cpt.add(temp);
 			normalized.add(false);
 		}
+		numFromStates += toAdd;
 	}
 	
 	public void addToState(int toAdd) {
@@ -71,18 +78,54 @@ public class CPT {
 		normalized.set(rowInd, true);
 	}
 	
-	public void FRIGGIN_POWER_UP() {
-		// TODO (this gunna be great)
+	public CPT powerup() {
+		int poweredStates = 1 << numToStates;
+		CPT powered = new CPT();
+		powered.addToState(poweredStates);
+		powered.addFromState(numFromStates);
+		for (int i = 0; i < numFromStates; i++) {
+			for (int j = 0; j < poweredStates; j++) {
+				double sum = 0.0;
+				for (int k = 0; k < numToStates; k++) {
+					if ((j & (1 << k)) != 0) sum += this.get(i, k);
+				}
+				powered.set(i, j, sum);
+			}
+		}
+		return powered;
+	}
+	
+	private void parse(File file) {
+		try {
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			
+			String line;
+			while ((line = br.readLine()) != null) {
+				String[] parts = line.split(",");
+				
+				// Expand states
+				this.addFromState(1);
+				if (parts.length > numToStates) this.addToState(parts.length - numToStates);
+				
+				for (int i = 0; i < parts.length; i++) {
+					this.set(numFromStates - 1, i, Double.parseDouble(parts[i]));
+				}
+			}
+			
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public String toString() {
 		String str = "";
 		int rowInd = 0;
-		for (List<Double> row : cpt) {
-			if (!normalized.get(rowInd)) normalize(rowInd);
-			for (Double x : row) {
-				str += String.format("%6.3e\t", x);
+		for (int i = 0; i < numFromStates; i++) {
+			for (int j = 0; j < numToStates; j++) {
+				str += String.format("%6.3e\t", this.get(i, j));
 			}
 			str += "\n";
 			rowInd++;
