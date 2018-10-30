@@ -3,14 +3,14 @@ package notepatternanalyzer;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.TreeSet;
+
+import hmm.HMMObservable;
 
 /**
  * Class that represents a "cross section" of a sequence of notes.
  * @author Alumina
  */
-class NoteCluster {
+class NoteCluster implements HMMObservable {
     
 	// Primitive data
 	private HeldNote[][] notes = new HeldNote[9][12];
@@ -199,5 +199,14 @@ class NoteCluster {
 		if (track != -1) ret += "]";
 		
 		return ret;
+	}
+
+	@Override
+	public int getState() {
+		int state = 0;
+		for (HeldNote n : getNotes()) {
+			state |= 1 << n.getValue();
+		}
+		return state;
 	}
 }
