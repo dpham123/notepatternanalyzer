@@ -16,7 +16,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 
 	// Constants and variables
 	private int id;
-	private int size = 0;
+	private int numNotes = 0, size = 0;
 	private NoteClusterNode root;
 	
 	// Temporary variables mid generation
@@ -210,7 +210,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 			// If new timestamp, register previous timestamp as a note cluster
 			if (timestamp > currTime) {
 				curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
-				
+				size++;
 				if (prev != null) {
 					prev.setNext(curr);
 				} else {
@@ -254,6 +254,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 					root = curr;
 				}
 
+				size++;
 				prevNotes = currNotes;
 				currNotes = copyNotes(currNotes);
 				pressedNotes.clear();
@@ -273,7 +274,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 			
 			// Set the note into the track
 			notes.add(removedNote);
-			size++;
+			numNotes++;
 			
 			// Close off the note
 			openNotes[value - FIRST_NOTE] = null;
@@ -292,6 +293,7 @@ public class NoteTrack implements Iterable<NoteCluster> {
 	
 	public void cluster() {
 		if (curr != null) {
+			size++;
 			curr = new NoteClusterNode(new NoteCluster(copyNotes(prevNotes), copyNotes(pressedNotes), currTime, currKeySig, currTempo, currBpb, currBeatNote, ppq), prev, null);
 			prev.setNext(curr);
 			curr.getNotes().setDuration(0);

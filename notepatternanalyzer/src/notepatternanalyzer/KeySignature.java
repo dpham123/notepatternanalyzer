@@ -56,4 +56,38 @@ enum KeySignature {
 		}
 		return null;
 	}
+	
+	static int getOffset(KeySignature ks) {
+		switch (ks) {
+			case C:
+				return 0;
+			case C_SHARP:
+			case D_FLAT:
+				return 1;
+			case D:
+				return 2;
+			case E_FLAT:
+				return 3;
+			case E:
+				return 4;
+			case F:
+				return 5;
+			case F_SHARP:
+			case G_FLAT:
+				return 6;
+			case G:
+				return 7;
+			case A_FLAT:
+				return 8;
+			case A:
+				return 9;
+			case B_FLAT:
+				return 10;
+			case B:
+			case C_FLAT:
+				return 11;
+			default:
+				return 0;
+		}
+	}
 }

@@ -205,7 +205,7 @@ class NoteCluster implements HMMObservable {
 	public int getState() {
 		int state = 0;
 		for (HeldNote n : getNotes()) {
-			state |= 1 << n.getValue();
+			state |= 1 << ((KeySignature.getOffset(keySig) + n.getValue()) % 12);
 		}
 		return state;
 	}

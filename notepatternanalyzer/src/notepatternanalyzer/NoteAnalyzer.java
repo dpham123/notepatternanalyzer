@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import hmm.*;
+
 class NoteAnalyzer {
 	private File file;
 	private int prevHeldNoteValue = 0;
@@ -48,7 +50,7 @@ class NoteAnalyzer {
 			alreadyPrinted = true;
 			
 			measureDurationInTicks = (ppq * beatNote) * (bpb / beatNote);
-			sop(bpb + "/" + beatNote);
+			sop(bpb + "/" + beatNote + " " + notes.getKeySignature());
 			printToFile(bpb + "/" + beatNote);
 		}
 	}
@@ -150,12 +152,26 @@ class NoteAnalyzer {
 		try {
 			ns = new NoteSequence(na.file);
 			
+			HMM<NoteCluster> chordGuesser = HMM.createHMM(
+					new CPT("data/cpt/aluminaInitial1"),
+					new CPT("data/cpt/aluminaTransition1"),
+					(new CPT("data/cpt/aluminaEmission1")).powerup(),
+					HMM.readLabels("data/cpt/aluminaLabels1"),
+					ns);
+			if (chordGuesser == null) {
+				System.out.println("blah");
+				System.out.println(ns.size());
+				return;
+			}
+			List<String> guessedChords = chordGuesser.inferHidden();
+			int i = 0;
+			
 			for (NoteCluster notes : ns) {
 				na.printTimeSig(notes, ns);
 				na.printTempo(notes);
 				na.printMeasure(notes);
 				
-				sop(na.printNotes(notes));
+				sop(na.printNotes(notes) + " " + guessedChords.get(i++));
 				
 				na.printToFile(na.printNotes(notes));
 				na.updateAlreadyPrinted(false);
@@ -164,4 +180,5 @@ class NoteAnalyzer {
 			e.printStackTrace();
 		}
 	}
+
 }

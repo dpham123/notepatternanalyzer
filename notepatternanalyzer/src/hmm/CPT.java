@@ -21,7 +21,7 @@ public class CPT {
 		parse(new File(filename));
 	}
 	
-	public void addFromState(int toAdd) {
+	private void addFromState(int toAdd) {
 		for (int i = 0; i < toAdd; i++) {
 			List<Double> temp = new ArrayList<>();
 			for (int j = 0; j < numToStates; j++) {
@@ -33,13 +33,21 @@ public class CPT {
 		numFromStates += toAdd;
 	}
 	
-	public void addToState(int toAdd) {
+	private void addToState(int toAdd) {
 		for (List<Double> row : cpt) {
 			for (int i = 0; i < toAdd; i++) {
 				row.add(0.0);
 			}
 		}
 		numToStates += toAdd;
+	}
+	
+	public int getNumFromStates() {
+		return numFromStates;
+	}
+	
+	public int getNumToStates() {
+		return numToStates;
 	}
 	
 	public double get(int from, int to) {

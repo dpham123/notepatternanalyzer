@@ -6,13 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-import notepatternanalyzer.HeldNote;
+import hmm.HMMObservations;
 import notepatternanalyzer.KeySignature;
 
 /**
  * Prototype data structure to store and iterate over note sequences
  */
-public class NoteSequence implements Iterable<NoteCluster> {
+public class NoteSequence implements HMMObservations<NoteCluster> {
 
 
 	// Constants and variables
@@ -131,6 +131,7 @@ public class NoteSequence implements Iterable<NoteCluster> {
 				}
 			}
 		}
+		size = main.size();
 		
 //		for (NoteTrack track : tracks) {
 //			System.out.println(track + "\n===============================================\n");
