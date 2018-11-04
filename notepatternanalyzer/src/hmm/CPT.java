@@ -78,6 +78,7 @@ public class CPT {
 				correction = -min + (max - min) * correctionOffsetRatio;
 				sum += row.size() * correction;
 			}
+			
 			// Normalize
 			for (int i = 0; i < row.size(); i++) {
 				row.set(i, (row.get(i) + correction) / sum);
@@ -95,7 +96,7 @@ public class CPT {
 			for (int j = 0; j < poweredStates; j++) {
 				double sum = 0.0;
 				for (int k = 0; k < numToStates; k++) {
-					if ((j & (1 << k)) != 0) sum += this.get(i, k);
+					if ((j & (1 << k)) != 0) sum += cpt.get(i).get(k);
 				}
 				powered.set(i, j, sum);
 			}
@@ -133,7 +134,7 @@ public class CPT {
 		int rowInd = 0;
 		for (int i = 0; i < numFromStates; i++) {
 			for (int j = 0; j < numToStates; j++) {
-				str += String.format("%6.3e\t", this.get(i, j));
+				str += String.format("%6.3e\t", cpt.get(i).get(j));
 			}
 			str += "\n";
 			rowInd++;

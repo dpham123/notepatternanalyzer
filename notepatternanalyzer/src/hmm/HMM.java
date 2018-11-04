@@ -61,7 +61,7 @@ public class HMM<T extends HMMObservable> {
 		
         double[] liLast = new double[n];
         double[] liCurr = new double[n];
-        int[][] phiti = new int[T][];
+        int[][] phi = new int[T][];
         double max;
         int argmax;
         
@@ -70,15 +70,18 @@ public class HMM<T extends HMMObservable> {
 
         // base case t=0
         int observation = iter.next().getState();
+        System.out.print(observation + " ");
         for (int i = 0; i < n; i++) {
             liLast[i] = Math.log10(initial.get(0, i) * emission.get(i, observation));
+            System.out.print(liLast[i] + " ");
         }
+        System.out.println();
 
         // recursive step
         for (int t = 1;iter.hasNext();t++) {
         	observation = iter.next().getState();
         	
-            phiti[t] = new int[n];
+            phi[t] = new int[n];
             for (int j = 0; j < n; j++) {
 
                 // get max
@@ -96,13 +99,17 @@ public class HMM<T extends HMMObservable> {
                 liCurr[j] = max + Math.log10(emission.get(j, observation));
 
                 // set phi matrix
-                phiti[t][j] = argmax;
+                phi[t][j] = argmax;
+                System.out.print(phi[t][j] + " ");
             }
 
             // update last seen l
+            System.out.print("\n" + observation + " ");
             for (int i = 0; i < n; i++) {
                 liLast[i] = liCurr[i];
+                System.out.print(liLast[i] + " ");
             }
+            System.out.println();
         }
 
         // backtrack to get most likely set of states
@@ -121,7 +128,7 @@ public class HMM<T extends HMMObservable> {
         List<String> hiddenStates = new LinkedList<>();
         hiddenStates.add(labels.get(argmax));
         for (int t = T - 1; t > 0; t--) {
-        	state = phiti[t][state];
+        	state = phi[t][state];
             hiddenStates.add(labels.get(state));
         }
         
